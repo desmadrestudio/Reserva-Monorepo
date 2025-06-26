@@ -1,5 +1,5 @@
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
-import { useSearchParams, useNavigate } from "@remix-run/react";
+import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
@@ -13,6 +13,7 @@ export default function ChooseCategoryPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const location = searchParams.get("location");
   const currentStep = "category";
@@ -32,6 +33,14 @@ export default function ChooseCategoryPage() {
       navigate(`/booking/${next}?location=${location}&category=${selectedCategory}`);
     }
   };
+
+  if (navigation.state === "loading") {
+    return (
+      <Page>
+        <Card sectioned>Loading...</Card>
+      </Page>
+    );
+  }
 
   return (
     <Page title="Choose Category">
@@ -64,6 +73,23 @@ export default function ChooseCategoryPage() {
           <div style={{ height: "70px" }} />
         </Layout.Section>
       </Layout>
+    </Page>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <Page title="Error">
+      <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+    </Page>
+  );
+}
+
+export function CatchBoundary() {
+  return (
+    <Page title="Error">
+      <Card sectioned>Something went wrong.</Card>
     </Page>
   );
 }

@@ -1,5 +1,5 @@
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
-import { useSearchParams, useNavigate } from "@remix-run/react";
+import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
@@ -14,6 +14,7 @@ export default function ChooseDurationPage() {
   const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const currentStep = "duration";
   const location = searchParams.get("location");
@@ -37,6 +38,14 @@ export default function ChooseDurationPage() {
       );
     }
   };
+
+  if (navigation.state === "loading") {
+    return (
+      <Page>
+        <Card sectioned>Loading...</Card>
+      </Page>
+    );
+  }
 
   return (
     <Page title="Choose Duration">
@@ -71,6 +80,23 @@ export default function ChooseDurationPage() {
           <div style={{ height: "70px" }} />
         </Layout.Section>
       </Layout>
+    </Page>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <Page title="Error">
+      <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+    </Page>
+  );
+}
+
+export function CatchBoundary() {
+  return (
+    <Page title="Error">
+      <Card sectioned>Something went wrong.</Card>
     </Page>
   );
 }
