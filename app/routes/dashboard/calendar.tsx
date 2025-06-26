@@ -43,16 +43,21 @@ export const loader: LoaderFunction = async () => {
 
 export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
-    const date = new Date(formData.get("date") as string);
-    const time = formData.get("time") as string;
-    const customer = formData.get("customer") as string;
-    const notes = formData.get("notes") as string;
+    const dateString = formData.get("date");
+    const time = formData.get("time") as string | null;
+    const customer = formData.get("customer") as string | null;
+    const notes = formData.get("notes") as string | null;
 
-    if (!date || !time || !customer) {
+    if (!dateString || !time || !customer) {
         return json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    await createAppointment({ date, time, customer, notes });
+    const date = new Date(String(dateString));
+    if (isNaN(date.getTime())) {
+        return json({ error: "Invalid date" }, { status: 400 });
+    }
+
+    await createAppointment({ date, time, customer, notes: notes ?? undefined });
 
     return json({ success: true });
 };
