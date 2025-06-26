@@ -1,4 +1,4 @@
-import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
+import * as Polaris from "@shopify/polaris";
 import { json, type LoaderFunction } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import type { V2_MetaFunction } from "@remix-run/node";
@@ -12,6 +12,7 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default function Home() {
+  const { Page, Layout, Card, Button, Text } = Polaris;
   const data = useLoaderData<{ userName: string }>();
 
   return (
@@ -34,9 +35,7 @@ export default function Home() {
               <Link to="/dashboard">
                 <Button primary>Go to Dashboard</Button>
               </Link>
-              <Link to="/dashboard/calendar">
-                <Button>Book New Appointment</Button>
-              </Link>
+              <Button url="/dashboard/calendar">Book New Appointment</Button>
               <Link to="/dashboard/appointments">
                 <Button plain>View All Appointments</Button>
               </Link>

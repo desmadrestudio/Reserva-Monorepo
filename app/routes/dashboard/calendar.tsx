@@ -4,19 +4,10 @@ import {
     type ActionFunction,
 } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useRouteError } from "@remix-run/react";
-import {
-    Page,
-    Layout,
-    Card,
-    Button,
-    DatePicker,
-    TextField,
-    Stack,
-    Text,
-} from "@shopify/polaris";
+import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "../../services/appointment.server";
-import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
+import UpcomingAppointmentsCard from "../../components/dashboard/UpcomingAppointmentsCard";
 
 type Appointment = {
     id: string;
@@ -72,6 +63,7 @@ const groupAppointmentsByDate = (appointments: Appointment[]) => {
 };
 
 export default function CalendarPage() {
+    const { Page, Layout, Card, Button, DatePicker, TextField, Stack, Text } = Polaris;
     const { appointments } = useLoaderData<LoaderData>();
     const navigation = useNavigation();
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
