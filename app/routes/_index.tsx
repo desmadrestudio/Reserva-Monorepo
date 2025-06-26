@@ -31,7 +31,7 @@ export default function Home() {
                 flexWrap: "wrap",
               }}
             >
-              <Link to="/dashboard/route">
+              <Link to="/dashboard">
                 <Button primary>Go to Dashboard</Button>
               </Link>
               <Link to="/dashboard/calendar">
