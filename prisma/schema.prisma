@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.sqlite"
+}
+
+// Session model for Shopify OAuth sessions
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+}
+
+// ✅ Provider model (was "therapist")
+model Provider {
+  id   String @id @default(cuid())
+  name String
+
+  appointments   Appointment[]  @relation("ProviderAppointments")
+  availabilities Availability[] // ✅ Reverse relation for Availability
+}
+
+// ✅ Bookable service
+model Service {
+  id       String  @id @default(cuid())
+  name     String
+  duration Int
+  price    Float?
+  notes    String?
+}
+
+// ✅ Weekly availability for a provider
+model Availability {
+  id         String @id @default(cuid())
+  providerId String
+  dayOfWeek  Int // 0 = Sunday, 6 = Saturday
+  startTime  String // "10:00 AM"
+  endTime    String // "4:00 PM"
+
+  provider Provider @relation(fields: [providerId], references: [id])
+}
+
+// ✅ Appointment (links to Provider)
+model Appointment {
+  id         String   @id @default(cuid())
+  shop       String
+  date       DateTime
+  time       String
+  customer   String
+  providerId String
+  service    String?
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  provider Provider @relation("ProviderAppointments", fields: [providerId], references: [id])
+}
