@@ -7,7 +7,14 @@ module.exports = {
     "@remix-run/eslint-config/jest-testing-library",
     "prettier",
   ],
+  settings: {
+    jest: { version: 29 },
+  },
   globals: {
     shopify: "readonly"
+  },
+  rules: {
+    'import/no-duplicates': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
 };

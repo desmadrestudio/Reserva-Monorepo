@@ -6,12 +6,12 @@ import {
     Button,
     Stack,
   } from "@shopify/polaris";
-  import { Form, useSearchParams, json, redirect, useNavigation, useRouteError } from "@remix-run/react";
+  import { Form, useSearchParams, redirect, useNavigation, useRouteError } from "@remix-run/react";
   import type { ActionFunction } from "@remix-run/node";
   
   export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
-    const booking = Object.fromEntries(formData);
+    void Object.fromEntries(formData);
   
 
   
