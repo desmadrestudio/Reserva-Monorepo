@@ -79,10 +79,13 @@ DATABASE_URL="file:./dev.sqlite"
 
 - ✅ Use **Polaris only** for all UI. No Tailwind.
 - 🔁 Keep everything scoped to `/apps/reserva-ui`
-- 📚 Use `/lib/prisma.server.ts` for Prisma logic
+- 📚 Use `/app/lib/prisma.server.ts` for accessing Prisma Client
+- 🧬 Prisma schema lives in `/apps/reserva-ui/prisma/schema.prisma`
 - 🔒 Don’t delete or overwrite files unless told
-- 🧩 Reuse existing patterns and follow project layout
-- 📋 If unsure, leave a `TODO:` and write to `TODO.md`
+- 🧩 Reuse existing patterns and follow `/app/components/` layout
+- ⚠️ SSR safety: Use `typeof window !== "undefined"` for client-only logic
+- ❗ Avoid SSR-only packages like `react-dom/server` in embedded Shopify Admin
+- 📋 If unsure, leave a `TODO:` and log it in `TODO.md`
 
 ---
 
