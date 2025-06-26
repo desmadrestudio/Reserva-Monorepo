@@ -1,5 +1,5 @@
-import { Page, Layout } from "@shopify/polaris";
-import { useSearchParams, useNavigate } from "@remix-run/react";
+import { Page, Layout, Card } from "@shopify/polaris";
+import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 import AddOnsCard, { AddOn } from "~/components/booking/AddOnsCard";
@@ -17,6 +17,7 @@ export default function AddOnsPage() {
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const currentStep = "addons";
   const location = searchParams.get("location");
@@ -34,6 +35,14 @@ export default function AddOnsPage() {
       }
     }
   }, []);
+
+  if (navigation.state === "loading") {
+    return (
+      <Page>
+        <Card sectioned>Loading...</Card>
+      </Page>
+    );
+  }
 
   const toggleAddon = (id: string) => {
     setSelectedAddons((prev) =>
@@ -76,6 +85,23 @@ export default function AddOnsPage() {
           <div style={{ height: "70px" }} />
         </Layout.Section>
       </Layout>
+    </Page>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <Page title="Error">
+      <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+    </Page>
+  );
+}
+
+export function CatchBoundary() {
+  return (
+    <Page title="Error">
+      <Card sectioned>Something went wrong.</Card>
     </Page>
   );
 }

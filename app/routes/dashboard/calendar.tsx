@@ -3,7 +3,7 @@ import {
     type LoaderFunction,
     type ActionFunction,
 } from "@remix-run/node";
-import { useLoaderData, Form } from "@remix-run/react";
+import { useLoaderData, Form, useNavigation, useRouteError } from "@remix-run/react";
 import {
     Page,
     Layout,
@@ -68,10 +68,19 @@ const groupAppointmentsByDate = (appointments: Appointment[]) => {
 
 export default function CalendarPage() {
     const { appointments } = useLoaderData<LoaderData>();
+    const navigation = useNavigation();
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [time, setTime] = useState("");
     const [customer, setCustomer] = useState("");
     const [notes, setNotes] = useState("");
+
+    if (navigation.state === "loading") {
+        return (
+            <Page>
+                <Card sectioned>Loading...</Card>
+            </Page>
+        );
+    }
 
     const grouped = groupAppointmentsByDate(appointments);
 
@@ -142,6 +151,23 @@ export default function CalendarPage() {
                     <UpcomingAppointmentsCard grouped={grouped} />
                 </Layout.Section>
             </Layout>
+        </Page>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+    return (
+        <Page title="Error">
+            <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+        </Page>
+    );
+}
+
+export function CatchBoundary() {
+    return (
+        <Page title="Error">
+            <Card sectioned>Something went wrong.</Card>
         </Page>
     );
 }

@@ -1,4 +1,5 @@
 import { Page, Layout, Card, Text } from "@shopify/polaris";
+import { useNavigation, useRouteError } from "@remix-run/react";
 
 type Appointment = {
     id: string;
@@ -13,6 +14,16 @@ const dummyAppointments: Appointment[] = [
 ];
 
 export default function AppointmentsPage() {
+    const navigation = useNavigation();
+
+    if (navigation.state === "loading") {
+        return (
+            <Page>
+                <Card sectioned>Loading...</Card>
+            </Page>
+        );
+    }
+
     return (
         <Page title="All Appointments">
             <Layout>
@@ -29,6 +40,23 @@ export default function AppointmentsPage() {
                     ))}
                 </Layout.Section>
             </Layout>
+        </Page>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+    return (
+        <Page title="Error">
+            <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+        </Page>
+    );
+}
+
+export function CatchBoundary() {
+    return (
+        <Page title="Error">
+            <Card sectioned>Something went wrong.</Card>
         </Page>
     );
 }

@@ -7,7 +7,7 @@ import {
     Button,
     Stack,
   } from "@shopify/polaris";
-  import { useNavigate, useSearchParams } from "@remix-run/react";
+  import { useNavigate, useSearchParams, useNavigation, useRouteError } from "@remix-run/react";
   import { useState, useEffect } from "react";
   import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
   
@@ -23,6 +23,7 @@ import {
   export default function SchedulePage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const navigation = useNavigation();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
   
@@ -44,8 +45,8 @@ import {
       }
     }, []);
   
-    const handleContinue = () => {
-      const next = getNextStep(currentStep);
+  const handleContinue = () => {
+    const next = getNextStep(currentStep);
       if (!next || !selectedDate || !selectedTime) return;
   
       const params = new URLSearchParams();
@@ -59,12 +60,20 @@ import {
       params.append("date", selectedDate.toISOString());
       params.append("time", selectedTime);
   
-      navigate(`/booking/review?${params.toString()}`);
-    };
+    navigate(`/booking/review?${params.toString()}`);
+  };
+
+    if (navigation.state === "loading") {
+      return (
+        <Page>
+          <Card sectioned>Loading...</Card>
+        </Page>
+      );
+    }
   
-    return (
-      <Page title="Select Date & Time">
-        <Layout>
+  return (
+    <Page title="Select Date & Time">
+      <Layout>
           <Layout.Section>
             <Card sectioned>
               <Text variant="headingMd" as="h2">
@@ -114,6 +123,23 @@ import {
             </Button>
           </Layout.Section>
         </Layout>
-      </Page>
-    );
-  }
+    </Page>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <Page title="Error">
+      <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+    </Page>
+  );
+}
+
+export function CatchBoundary() {
+  return (
+    <Page title="Error">
+      <Card sectioned>Something went wrong.</Card>
+    </Page>
+  );
+}
