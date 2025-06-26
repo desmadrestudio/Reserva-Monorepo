@@ -13,7 +13,7 @@ import {
     const formData = await request.formData();
     const booking = Object.fromEntries(formData);
   
-    console.log("✅ Booking confirmed:", booking);
+
   
     // 🧪 You could save to DB here instead
     // await prisma.booking.create({ data: booking });

@@ -15,7 +15,7 @@ import {
     Text,
 } from "@shopify/polaris";
 import { useState } from "react";
-import { prisma } from "../lib/prisma.server"; // adjust path if needed
+import { prisma } from "../../lib/prisma.server";
 
 type Appointment = {
     id: string;
