@@ -2,11 +2,11 @@ import { Link, useLocation } from "@remix-run/react";
 import type { Location } from "@remix-run/react";
 
 const tabs = [
-  { label: "Calendar", path: "/frontend/dashboard/calendar" },
-  { label: "Checkout", path: "/frontend/dashboard/checkout" },
-  { label: "Customers", path: "/frontend/dashboard/customers" },
-  { label: "Messages", path: "/frontend/dashboard/messages" },
-  { label: "More", path: "/frontend/dashboard/settings" },
+  { label: "Calendar", path: "/dashboard/calendar" },
+  { label: "Checkout", path: "/dashboard/checkout" },
+  { label: "Customers", path: "/dashboard/customers" },
+  { label: "Messages", path: "/dashboard/messages" },
+  { label: "More", path: "/dashboard/settings" },
 ];
 
 export default function MobileTabBar() {
