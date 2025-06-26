@@ -7,6 +7,7 @@ import { useLoaderData, Form } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "../../services/appointment.server";
+import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
 
 const {
   Page,
@@ -131,34 +132,7 @@ export default function CalendarPage() {
         </Layout.Section>
 
         <Layout.Section>
-          <Card sectioned title="Upcoming Appointments">
-            {Object.keys(grouped).length === 0 ? (
-              <Text as="p">No bookings this month yet.</Text>
-            ) : (
-              Object.entries(grouped).map(([dateStr, appts]) => (
-                <div key={dateStr} style={{ marginBottom: "1rem" }}>
-                  <Text as="h4" variant="headingSm">
-                    {new Date(dateStr).toLocaleDateString(undefined, {
-                      weekday: "long",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </Text>
-                  <Stack vertical spacing="tight">
-                    {appts.map((appt) => (
-                      <Card key={appt.id} sectioned>
-                        <Stack spacing="tight">
-                          <Text as="p">
-                            🕒 {appt.time} – 👤 {appt.customer}
-                          </Text>
-                        </Stack>
-                      </Card>
-                    ))}
-                  </Stack>
-                </div>
-              ))
-            )}
-          </Card>
+          <UpcomingAppointmentsCard grouped={grouped} emptyMessage="No bookings this month yet." />
         </Layout.Section>
       </Layout>
     </Page>

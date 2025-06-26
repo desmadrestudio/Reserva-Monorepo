@@ -16,6 +16,7 @@ import {
 } from "@shopify/polaris";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "../../services/appointment.server";
+import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
 
 type Appointment = {
     id: string;
@@ -138,38 +139,7 @@ export default function CalendarPage() {
 
                 {/* 📖 Upcoming Appointments */}
                 <Layout.Section>
-                    <Card sectioned title="Upcoming Appointments">
-                        {Object.keys(grouped).length === 0 ? (
-                            <Text>No bookings yet this month.</Text>
-                        ) : (
-                            Object.entries(grouped).map(([dateStr, appts]) => (
-                                <div key={dateStr} style={{ marginBottom: "1.5rem" }}>
-                                    <Text variant="headingSm">
-                                        {new Date(dateStr).toLocaleDateString(undefined, {
-                                            weekday: "long",
-                                            month: "short",
-                                            day: "numeric",
-                                        })}
-                                    </Text>
-                                    <Stack vertical spacing="tight">
-                                        {appt.map((appt) => (
-                                            <Card key={appt.id} sectioned>
-                                                <Text>
-                                                    🕒 {appt.time} — 👤 {appt.customer}
-                                                    {appt.notes && (
-                                                        <>
-                                                            <br />
-                                                            📝 {appt.notes}
-                                                        </>
-                                                    )}
-                                                </Text>
-                                            </Card>
-                                        ))}
-                                    </Stack>
-                                </div>
-                            ))
-                        )}
-                    </Card>
+                    <UpcomingAppointmentsCard grouped={grouped} />
                 </Layout.Section>
             </Layout>
         </Page>
