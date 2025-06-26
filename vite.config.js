@@ -70,6 +70,6 @@ export default defineConfig({
     include: ["@shopify/app-bridge-react", "@shopify/polaris"],
   },
   ssr: {
-    noExternal: ['@shopify/polaris', '@shopify/react-i18n'],
+    noExternal: ['@shopify/polaris'],
   },
 });
