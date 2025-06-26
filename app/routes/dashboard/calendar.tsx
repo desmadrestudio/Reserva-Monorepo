@@ -15,7 +15,7 @@ import {
     Text,
 } from "@shopify/polaris";
 import { useState } from "react";
-import { prisma } from "../../lib/prisma.server";
+import { getAppointments, createAppointment } from "../../services/appointment.server";
 
 type Appointment = {
     id: string;
@@ -35,15 +35,7 @@ export const loader: LoaderFunction = async () => {
     const start = new Date(now.getFullYear(), now.getMonth(), 1);
     const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    const appointments = await prisma.appointment.findMany({
-        where: {
-            date: {
-                gte: start,
-                lte: end,
-            },
-        },
-        orderBy: { date: "asc" },
-    });
+    const appointments = await getAppointments({ start, end });
 
     return json<LoaderData>({ appointments });
 };
@@ -59,15 +51,7 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    await prisma.appointment.create({
-        data: {
-            shop: "test-booking-spa",
-            date,
-            time,
-            customer,
-            notes,
-        },
-    });
+    await createAppointment({ date, time, customer, notes });
 
     return json({ success: true });
 };

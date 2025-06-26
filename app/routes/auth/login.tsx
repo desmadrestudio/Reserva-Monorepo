@@ -6,7 +6,7 @@ import {
 import { useLoaderData, Form } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
-import prisma from "../../db.server"; // ✅ fixed path to match `db.server.ts`
+import { getAppointments, createAppointment } from "../../services/appointment.server";
 
 const {
   Page,
@@ -25,15 +25,7 @@ export const loader: LoaderFunction = async () => {
   const start = new Date(now.getFullYear(), now.getMonth(), 1);
   const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-  const appointments = await prisma.appointment.findMany({
-    where: {
-      date: {
-        gte: start,
-        lte: end,
-      },
-    },
-    orderBy: { date: "asc" },
-  });
+  const appointments = await getAppointments({ start, end });
 
   return json({ appointments });
 };
@@ -49,14 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ error: "Invalid input" }, { status: 400 });
   }
 
-  await prisma.appointment.create({
-    data: {
-      shop: "test-booking-spa", // TODO: Replace with real shop session
-      date,
-      time,
-      customer,
-    },
-  });
+  await createAppointment({ date, time, customer });
 
   return json({ success: true });
 };
