@@ -1,15 +1,8 @@
-import {
-  Page,
-  Layout,
-  Card,
-  Text,
-  Checkbox,
-  Button,
-  Stack,
-} from "@shopify/polaris";
+import { Page, Layout } from "@shopify/polaris";
 import { useSearchParams, useNavigate } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
+import AddOnsCard, { AddOn } from "~/components/booking/AddOnsCard";
 
 // 🧪 Mock Add-ons
 const ADDONS = [
@@ -71,36 +64,12 @@ export default function AddOnsPage() {
     <Page title="Add-on Options">
       <Layout>
         <Layout.Section>
-          <Card sectioned>
-            <Text variant="headingMd" as="h2">
-              Customize Your Booking
-            </Text>
-
-            <Stack vertical spacing="loose" style={{ marginTop: "1rem" }}>
-              {ADDONS.map((addon) => (
-                <Checkbox
-                  key={addon.id}
-                  label={addon.label}
-                  checked={selectedAddons.includes(addon.id)}
-                  onChange={() => toggleAddon(addon.id)}
-                />
-              ))}
-            </Stack>
-
-            {selectedAddons.length > 0 && (
-              <div style={{ marginTop: "1.5rem" }}>
-                <Text variant="bodySm" tone="subdued">
-                  Selected: {selectedAddons.length} add-on(s)
-                </Text>
-              </div>
-            )}
-
-            <div style={{ marginTop: "2rem" }}>
-              <Button primary fullWidth onClick={handleContinue}>
-                Continue
-              </Button>
-            </div>
-          </Card>
+          <AddOnsCard
+            addons={ADDONS}
+            selected={selectedAddons}
+            onToggle={toggleAddon}
+            onContinue={handleContinue}
+          />
         </Layout.Section>
 
         <Layout.Section>
