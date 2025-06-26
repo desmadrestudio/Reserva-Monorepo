@@ -180,8 +180,7 @@ export default function Dashboard() {
 - Bookings are always scoped by `shop`
 
 ---
-
-## 📝 License
+## 🛡 License
 
 © 2025 Desmadre Studio. All rights reserved.  
 Unauthorized reproduction or distribution is prohibited.
