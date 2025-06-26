@@ -17,7 +17,9 @@
     "config:use": "shopify app config use",
     "generate": "shopify app generate",
     "deploy": "shopify app deploy",
-    "env": "shopify app env"
+    "env": "shopify app env",
+    "check:sanity": "./scripts/sanity-check.sh",
+    "check:deploy": "./scripts/post-deploy-check.sh"
   },
   "engines": {
     "node": "^18.20 || ^20.10 || >=21.0.0"
