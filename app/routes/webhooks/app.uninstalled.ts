@@ -2,7 +2,7 @@ import { authenticate } from "../shopify.server";
 import { prisma as db } from "../lib/prisma.server";
 
 export const action = async ({ request }) => {
-  const { shop, session, topic } = await authenticate.webhook(request);
+  const { shop, session } = await authenticate.webhook(request);
 
 
   // Webhook requests can trigger multiple times and after an app has already been uninstalled.
