@@ -4,19 +4,21 @@ import {
     type ActionFunction,
 } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useRouteError } from "@remix-run/react";
-import {
-    Page,
-    Layout,
-    Card,
-    Button,
-    DatePicker,
-    TextField,
-    Stack,
-    Text,
-} from "@shopify/polaris";
+import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "~/services/appointment.server";
 import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
+
+const {
+    Page,
+    Layout,
+    LegacyCard,
+    Button,
+    DatePicker,
+    TextField,
+    LegacyStack,
+    Text,
+} = Polaris;
 
 type Appointment = {
     id: string;
@@ -82,7 +84,7 @@ export default function CalendarPage() {
     if (navigation.state === "loading") {
         return (
             <Page>
-                <Card sectioned>Loading...</Card>
+                <LegacyCard sectioned>Loading...</LegacyCard>
             </Page>
         );
     }
@@ -94,7 +96,7 @@ export default function CalendarPage() {
             <Layout>
                 {/* 📅 Date Picker */}
                 <Layout.Section>
-                    <Card sectioned>
+                    <LegacyCard sectioned>
                         <Text variant="headingMd">Select a Date</Text>
                         <DatePicker
                             month={selectedDate.getMonth()}
@@ -106,19 +108,19 @@ export default function CalendarPage() {
                             disableDatesBefore={new Date()}
                             onMonthChange={() => { }}
                         />
-                    </Card>
+                    </LegacyCard>
                 </Layout.Section>
 
                 {/* 📝 Manual Booking Form */}
                 <Layout.Section>
-                    <Card sectioned title="Book New Appointment">
+                    <LegacyCard sectioned title="Book New Appointment">
                         <Form method="post" action="/dashboard/calendar">
                             <input
                                 type="hidden"
                                 name="date"
                                 value={selectedDate.toISOString()}
                             />
-                            <Stack vertical spacing="tight">
+                            <LegacyStack vertical spacing="tight">
                                 <TextField
                                     label="Customer Name"
                                     name="customer"
@@ -141,14 +143,14 @@ export default function CalendarPage() {
                                     onChange={setNotes}
                                     multiline
                                 />
-                            </Stack>
+                            </LegacyStack>
                             <div style={{ marginTop: "1.5rem" }}>
                                 <Button submit primary fullWidth>
                                     Confirm Booking
                                 </Button>
                             </div>
                         </Form>
-                    </Card>
+                    </LegacyCard>
                 </Layout.Section>
 
                 {/* 📖 Upcoming Appointments */}
@@ -164,7 +166,7 @@ export function ErrorBoundary() {
     const error = useRouteError();
     return (
         <Page title="Error">
-            <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+            <LegacyCard sectioned>{error ? String(error) : "Unknown error"}</LegacyCard>
         </Page>
     );
 }
@@ -172,7 +174,7 @@ export function ErrorBoundary() {
 export function CatchBoundary() {
     return (
         <Page title="Error">
-            <Card sectioned>Something went wrong.</Card>
+            <LegacyCard sectioned>Something went wrong.</LegacyCard>
         </Page>
     );
 }

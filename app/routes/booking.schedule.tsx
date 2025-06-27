@@ -1,15 +1,17 @@
-import {
+import * as Polaris from "@shopify/polaris";
+import { useNavigate, useSearchParams, useNavigation, useRouteError } from "@remix-run/react";
+import { useState, useEffect } from "react";
+import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
+
+const {
     Page,
     Layout,
-    Card,
+    LegacyCard,
     DatePicker,
     Text,
     Button,
-    Stack,
-  } from "@shopify/polaris";
-  import { useNavigate, useSearchParams, useNavigation, useRouteError } from "@remix-run/react";
-  import { useState, useEffect } from "react";
-  import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
+    LegacyStack,
+} = Polaris;
   
   const TIME_SLOTS = [
     "10:00 AM",
@@ -66,7 +68,7 @@ import {
     if (navigation.state === "loading") {
       return (
         <Page>
-          <Card sectioned>Loading...</Card>
+          <LegacyCard sectioned>Loading...</LegacyCard>
         </Page>
       );
     }
@@ -75,7 +77,7 @@ import {
     <Page title="Select Date & Time">
       <Layout>
           <Layout.Section>
-            <Card sectioned>
+            <LegacyCard sectioned>
               <Text variant="headingMd" as="h2">
                 Pick a Date
               </Text>
@@ -89,15 +91,15 @@ import {
                 disableDatesBefore={new Date()}
                 onMonthChange={() => {}}
               />
-            </Card>
+            </LegacyCard>
           </Layout.Section>
   
           <Layout.Section>
-            <Card sectioned>
+            <LegacyCard sectioned>
               <Text variant="headingMd" as="h2">
                 Pick a Time
               </Text>
-              <Stack wrap spacing="tight">
+              <LegacyStack wrap spacing="tight">
                 {TIME_SLOTS.map((slot) => (
                   <Button
                     key={slot}
@@ -108,8 +110,8 @@ import {
                     {slot}
                   </Button>
                 ))}
-              </Stack>
-            </Card>
+              </LegacyStack>
+            </LegacyCard>
           </Layout.Section>
   
           <Layout.Section>
@@ -131,7 +133,7 @@ export function ErrorBoundary() {
   const error = useRouteError();
   return (
     <Page title="Error">
-      <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+      <LegacyCard sectioned>{error ? String(error) : "Unknown error"}</LegacyCard>
     </Page>
   );
 }
@@ -139,7 +141,7 @@ export function ErrorBoundary() {
 export function CatchBoundary() {
   return (
     <Page title="Error">
-      <Card sectioned>Something went wrong.</Card>
+      <LegacyCard sectioned>Something went wrong.</LegacyCard>
     </Page>
   );
 }
