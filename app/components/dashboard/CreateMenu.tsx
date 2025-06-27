@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import {
   PlusIcon,
@@ -8,29 +9,41 @@ import {
 } from "@shopify/polaris-icons";
 import { useIsMobile } from "../../utils/useIsMobile";
 
-export default function CreateMenu() {
+export default function CreateMenu({
+  selectedDate,
+}: {
+  selectedDate: Date;
+}) {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
 
+  const dateParam = selectedDate.toISOString().split("T")[0];
   const items: Polaris.ActionListItemDescriptor[] = [
     {
-      url: "/appointments/new",
       content: "Create Appointment",
       prefix: <Polaris.Icon source={CalendarTimeIcon} />,
-      onAction: () => setOpen(false),
+      onAction: () => {
+        setOpen(false);
+        navigate(`/appointments/new?date=${dateParam}`);
+      },
     },
     {
-      url: "/classes/new",
       content: "Create Class",
       prefix: <Polaris.Icon source={BookIcon} />,
-      onAction: () => setOpen(false),
+      onAction: () => {
+        setOpen(false);
+        navigate(`/classes/new?date=${dateParam}`);
+      },
     },
     {
-      url: "/events/new",
       content: "Create Personal Event",
       prefix: <Polaris.Icon source={NoteAddIcon} />,
-      onAction: () => setOpen(false),
+      onAction: () => {
+        setOpen(false);
+        navigate(`/events/new?date=${dateParam}`);
+      },
     },
   ];
 
