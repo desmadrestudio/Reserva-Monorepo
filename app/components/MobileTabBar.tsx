@@ -8,6 +8,7 @@ import type { Location } from "@remix-run/react";
 export default function MobileTabBar() {
   const location: Location = useLocation();
   const isMobile = useIsMobile();
+  console.log("Rendering MobileTabBar");
 
   if (!isMobile) return null;
 
@@ -22,7 +23,7 @@ export default function MobileTabBar() {
       borderBlockStartWidth="025"
       borderColor="border"
       padding="200"
-      zIndex="6"
+      zIndex="100"
     >
       <Polaris.InlineStack align="space-around" blockAlign="center" gap="400">
         {mobileNavigation.map((tab) => {
