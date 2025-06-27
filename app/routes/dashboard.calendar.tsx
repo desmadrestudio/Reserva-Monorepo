@@ -5,6 +5,8 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
+import { ArrowLeftIcon, ArrowRightIcon } from "@shopify/polaris-icons";
+import DayTimeline from "~/components/dashboard/DayTimeline";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "~/services/appointment.server";
 import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
@@ -18,6 +20,8 @@ const {
     TextField,
     LegacyStack,
     Text,
+    Box,
+    InlineStack,
 } = Polaris;
 
 type Appointment = {
@@ -90,6 +94,13 @@ export default function CalendarPage() {
     }
 
     const grouped = groupAppointmentsByDate(appointments);
+    const dayKey = selectedDate.toISOString().split("T")[0];
+    const dailyAppointments = grouped[dayKey] || [];
+
+    const prevDay = () =>
+        setSelectedDate(new Date(selectedDate.getTime() - 86_400_000));
+    const nextDay = () =>
+        setSelectedDate(new Date(selectedDate.getTime() + 86_400_000));
 
     return (
         <Page title="Calendar & Manual Booking">
@@ -108,6 +119,34 @@ export default function CalendarPage() {
                             disableDatesBefore={new Date()}
                             onMonthChange={() => { }}
                         />
+                    </LegacyCard>
+                </Layout.Section>
+
+                {/* 📆 Day Timeline */}
+                <Layout.Section>
+                    <LegacyCard>
+                        <Box
+                            position="sticky"
+                            top="0"
+                            padding="400"
+                            background="bg"
+                            zIndex="1"
+                        >
+                            <InlineStack align="space-between" blockAlign="center">
+                                <Button icon={ArrowLeftIcon} plain onClick={prevDay} />
+                                <Text variant="headingMd">
+                                    {selectedDate.toLocaleDateString(undefined, {
+                                        weekday: "long",
+                                        month: "short",
+                                        day: "numeric",
+                                    })}
+                                </Text>
+                                <Button icon={ArrowRightIcon} plain onClick={nextDay} />
+                            </InlineStack>
+                        </Box>
+                        <Box style={{ height: "600px", overflowY: "scroll" }}>
+                            <DayTimeline date={selectedDate} appointments={dailyAppointments} />
+                        </Box>
                     </LegacyCard>
                 </Layout.Section>
 
