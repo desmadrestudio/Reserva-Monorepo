@@ -16,9 +16,9 @@ export default function UpcomingAppointmentsCard({
   grouped,
   emptyMessage = "No bookings yet this month.",
 }: Props) {
-  const { Card, Text, Stack } = Polaris;
+  const { LegacyCard, Text, LegacyStack } = Polaris;
   return (
-    <Card sectioned title="Upcoming Appointments">
+    <LegacyCard sectioned title="Upcoming Appointments">
       {Object.keys(grouped).length === 0 ? (
         <Text>{emptyMessage}</Text>
       ) : (
@@ -31,9 +31,9 @@ export default function UpcomingAppointmentsCard({
                 day: "numeric",
               })}
             </Text>
-            <Stack vertical spacing="tight">
+            <LegacyStack vertical spacing="tight">
               {appts.map((appt) => (
-                <Card key={appt.id} sectioned>
+                <LegacyCard key={appt.id} sectioned>
                   <Text>
                     🕒 {appt.time} — 👤 {appt.customer}
                     {appt.notes && (
@@ -42,12 +42,12 @@ export default function UpcomingAppointmentsCard({
                       </>
                     )}
                   </Text>
-                </Card>
+                </LegacyCard>
               ))}
-            </Stack>
+            </LegacyStack>
           </div>
         ))
       )}
-    </Card>
+    </LegacyCard>
   );
 }

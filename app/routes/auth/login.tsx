@@ -12,11 +12,10 @@ import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointment
 const {
   Page,
   Layout,
-  Card,
+  LegacyCard,
   Button,
   DatePicker,
   TextField,
-  Stack,
   Text,
 } = Polaris;
 
@@ -84,7 +83,7 @@ export default function CalendarPage() {
     <Page title="Calendar Booking">
       <Layout>
         <Layout.Section>
-          <Card sectioned>
+          <LegacyCard sectioned>
             <DatePicker
               month={selectedDate.getMonth()}
               year={selectedDate.getFullYear()}
@@ -95,11 +94,11 @@ export default function CalendarPage() {
               selected={{ start: selectedDate, end: selectedDate }}
               disableDatesBefore={new Date()}
             />
-          </Card>
+          </LegacyCard>
         </Layout.Section>
 
         <Layout.Section>
-          <Card sectioned title="Book for Selected Date">
+          <LegacyCard sectioned title="Book for Selected Date">
             <Form method="post">
               <input
                 type="hidden"
@@ -123,7 +122,7 @@ export default function CalendarPage() {
                 Book Appointment
               </Button>
             </Form>
-          </Card>
+          </LegacyCard>
         </Layout.Section>
 
         <Layout.Section>
