@@ -92,12 +92,7 @@ export default function CalendarPage() {
                 if (range?.start) setSelectedDate(range.start);
               }}
               onMonthChange={handleMonthChange}
-              selected={[
-                {
-                  start: selectedDate,
-                  end: selectedDate,
-                },
-              ]}
+              selected={{ start: selectedDate, end: selectedDate }}
               disableDatesBefore={new Date()}
             />
           </Card>
