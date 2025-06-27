@@ -7,6 +7,7 @@ import {
   BookIcon,
   NoteAddIcon,
 } from "@shopify/polaris-icons";
+import { useIsMobile } from "~/utils/useIsMobile";
 
 type CreateMenuProps = {
   selectedDate: Date;
@@ -20,6 +21,7 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const dateParam = selectedDate.toISOString().split("T")[0];
   const items: Polaris.ActionListItemDescriptor[] = [
@@ -49,6 +51,7 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
     },
   ];
 
+  const toggleMenu = () => setOpen((o) => !o);
   const openMenu = () => setOpen(true);
 
   const trigger = renderTrigger
@@ -61,29 +64,42 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
           <Polaris.Button
             icon={PlusIcon}
             variant="primary"
-            size="slim"
-            onClick={openMenu}
+            onClick={toggleMenu}
             accessibilityLabel="Create menu"
           />
         </div>
       );
 
+  if (isMobile) {
+    return (
+      <>
+        {trigger}
+        <Polaris.Sheet
+          open={open}
+          onClose={() => setOpen(false)}
+          activator={buttonRef}
+          accessibilityLabel="Create menu"
+        >
+          <Polaris.BlockStack gap="200" padding="400">
+            <Polaris.ActionList items={items} actionRole="menuitem" />
+            <Polaris.Button onClick={() => setOpen(false)} fullWidth>
+              Cancel
+            </Polaris.Button>
+          </Polaris.BlockStack>
+        </Polaris.Sheet>
+      </>
+    );
+  }
+
   return (
-    <>
-      {trigger}
-      <Polaris.Sheet
-        open={open}
-        onClose={() => setOpen(false)}
-        activator={buttonRef}
-        accessibilityLabel="Create menu"
-      >
-        <Polaris.BlockStack gap="200" padding="400">
-          <Polaris.ActionList items={items} actionRole="menuitem" />
-          <Polaris.Button onClick={() => setOpen(false)} fullWidth>
-            Cancel
-          </Polaris.Button>
-        </Polaris.BlockStack>
-      </Polaris.Sheet>
-    </>
+    <Polaris.Popover
+      active={open}
+      activator={trigger}
+      onClose={() => setOpen(false)}
+      autofocusTarget="first-node"
+      preferredAlignment="right"
+    >
+      <Polaris.ActionList items={items} actionRole="menuitem" />
+    </Polaris.Popover>
   );
 }

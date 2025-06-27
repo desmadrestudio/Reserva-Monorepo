@@ -8,7 +8,6 @@ import * as Polaris from "@shopify/polaris";
 import { ArrowLeftIcon, ArrowRightIcon } from "@shopify/polaris-icons";
 import DayTimeline from "~/components/dashboard/DayTimeline";
 import CreateMenu from "~/components/dashboard/CreateMenu";
-import CalendarCreateButton from "~/components/dashboard/CalendarCreateButton";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "~/services/appointment.server";
 import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
@@ -105,17 +104,8 @@ export default function CalendarPage() {
         setSelectedDate(new Date(selectedDate.getTime() + 86_400_000));
 
     return (
-        <Page
-            title="Calendar"
-            titleMetadata={
-                <CreateMenu
-                    selectedDate={selectedDate}
-                    renderTrigger={(props) => (
-                        <CalendarCreateButton {...props} />
-                    )}
-                />
-            }
-        >
+        <Page title="Calendar">
+            <CreateMenu selectedDate={selectedDate} />
             <Layout>
                 {/* 📅 Date Picker */}
                 <Layout.Section>
