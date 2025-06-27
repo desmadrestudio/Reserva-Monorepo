@@ -24,9 +24,18 @@ const DURATIONS = [
   { label: "60 minutes", value: "60" },
 ];
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const dateStr = url.searchParams.get("date");
+  let initialDate = new Date();
+  if (dateStr) {
+    const parsed = new Date(dateStr);
+    if (!isNaN(parsed.getTime())) {
+      initialDate = parsed;
+    }
+  }
   const providers = await getProviders();
-  return json({ providers });
+  return json({ providers, initialDate: initialDate.toISOString() });
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -60,10 +69,10 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewAppointment() {
-  const { providers } = useLoaderData<typeof loader>();
+  const { providers, initialDate } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date(initialDate));
   const [time, setTime] = useState("");
   const [customer, setCustomer] = useState("");
   const [providerId, setProviderId] = useState<string>("");
