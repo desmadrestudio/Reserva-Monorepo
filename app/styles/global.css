@@ -1,0 +1,25 @@
+.mobile-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--p-color-bg);
+  border-top: var(--p-border-width-025) solid var(--p-color-border);
+  display: flex;
+  justify-content: space-around;
+  padding: var(--p-space-200) 0;
+  z-index: 100;
+  box-shadow: var(--p-shadow-100);
+}
+
+.mobile-tab-bar a {
+  font-size: 14px;
+  text-align: center;
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .mobile-tab-bar {
+    display: none;
+  }
+}
