@@ -105,7 +105,7 @@ export default function CalendarPage() {
 
     return (
         <Page title="Calendar & Manual Booking">
-            <CreateMenu />
+            <CreateMenu selectedDate={selectedDate} />
             <Layout>
                 {/* 📅 Date Picker */}
                 <Layout.Section>
