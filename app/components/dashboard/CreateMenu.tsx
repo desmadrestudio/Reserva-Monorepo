@@ -53,11 +53,9 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
 
   const openMenu = () => setOpen(true);
 
-  return (
-    <>
-      {renderTrigger ? (
-        renderTrigger({ openMenu, triggerRef: buttonRef })
-      ) : (
+  const trigger = renderTrigger
+    ? renderTrigger({ openMenu, triggerRef: buttonRef })
+    : (
         <div
           ref={buttonRef}
           style={{
@@ -75,7 +73,10 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
             accessibilityLabel="Create menu"
           />
         </div>
-      )}
+      );
+  return isMobile ? (
+    <>
+      {trigger}
       <Polaris.Sheet
         open={open}
         onClose={() => setOpen(false)}
@@ -90,5 +91,13 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
         </Polaris.BlockStack>
       </Polaris.Sheet>
     </>
+  ) : (
+    <Polaris.Popover
+      active={open}
+      activator={trigger}
+      onClose={() => setOpen(false)}
+    >
+      <Polaris.ActionList items={items} actionRole="menuitem" />
+    </Polaris.Popover>
   );
 }
