@@ -1,8 +1,21 @@
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .mobile-tab-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
   background-color: var(--p-color-bg-surface); /* Shopify white */
   border-top: var(--p-border-width-025) solid var(--p-color-border);
   display: flex;
