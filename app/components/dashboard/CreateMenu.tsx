@@ -7,7 +7,6 @@ import {
   BookIcon,
   NoteAddIcon,
 } from "@shopify/polaris-icons";
-import { useIsMobile } from "../../utils/useIsMobile";
 
 type CreateMenuProps = {
   selectedDate: Date;
@@ -18,7 +17,6 @@ type CreateMenuProps = {
 };
 
 export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuProps) {
-  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
@@ -58,12 +56,7 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
     : (
         <div
           ref={buttonRef}
-          style={{
-            position: isMobile ? "fixed" : "absolute",
-            top: isMobile ? "0.5rem" : "1rem",
-            right: isMobile ? "0.5rem" : "1rem",
-            zIndex: 40,
-          }}
+          style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 40 }}
         >
           <Polaris.Button
             icon={PlusIcon}
@@ -74,7 +67,8 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
           />
         </div>
       );
-  return isMobile ? (
+
+  return (
     <>
       {trigger}
       <Polaris.Sheet
@@ -91,13 +85,5 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
         </Polaris.BlockStack>
       </Polaris.Sheet>
     </>
-  ) : (
-    <Polaris.Popover
-      active={open}
-      activator={trigger}
-      onClose={() => setOpen(false)}
-    >
-      <Polaris.ActionList items={items} actionRole="menuitem" />
-    </Polaris.Popover>
   );
 }
