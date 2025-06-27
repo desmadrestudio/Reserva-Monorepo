@@ -13,7 +13,6 @@ import "@shopify/polaris/build/esm/styles.css";
 import styles from "./styles/global.css";
 import MobileTabBar from "./components/MobileTabBar";
 import { desktopNavigation } from "./config/navigation";
-import { useIsMobile } from "./utils/useIsMobile";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
@@ -38,7 +37,6 @@ const CustomLink = ({ url, external, ...rest }: Polaris.LinkLikeComponentProps) 
 };
 
 export default function App() {
-  const isMobile = useIsMobile();
   return (
     <html lang="en">
       <head>
@@ -65,7 +63,7 @@ export default function App() {
             }
           >
             <Outlet />
-            {isMobile && <MobileTabBar />}
+            <MobileTabBar />
           </Polaris.Frame>
         </Polaris.AppProvider>
         <ScrollRestoration />
