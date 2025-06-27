@@ -26,3 +26,8 @@ for (const route of routes) {
     assert.equal(typeof mod.CatchBoundary, 'function');
   });
 }
+
+test('../app/routes/dashboard.calendar.tsx default export', async () => {
+  const mod = await import('../app/routes/dashboard.calendar.tsx');
+  assert.equal(typeof mod.default, 'function');
+});
