@@ -3,7 +3,7 @@
 client_id = "6da5cf4e97ca05474c28ac842c585747"
 name = "Reserva App"
 handle = "reserva-app"
-application_url = "https://special-thing-lived-offered.trycloudflare.com"
+application_url = "https://nursery-freelance-sorry-personality.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://special-thing-lived-offered.trycloudflare.com/auth/callback",
-  "https://special-thing-lived-offered.trycloudflare.com/auth/shopify/callback",
-  "https://special-thing-lived-offered.trycloudflare.com/api/auth/callback"
+  "https://nursery-freelance-sorry-personality.trycloudflare.com/auth/callback",
+  "https://nursery-freelance-sorry-personality.trycloudflare.com/auth/shopify/callback",
+  "https://nursery-freelance-sorry-personality.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

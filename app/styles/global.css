@@ -3,7 +3,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--p-color-bg);
+  background-color: var(--p-color-bg-surface); /* Shopify white */
   border-top: var(--p-border-width-025) solid var(--p-color-border);
   display: flex;
   justify-content: space-around;
@@ -12,10 +12,23 @@
   box-shadow: var(--p-shadow-100);
 }
 
-.mobile-tab-bar a {
-  font-size: 14px;
-  text-align: center;
+.tab-link {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.tab-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tab-link.active .tab-label {
+  color: var(--p-color-text-interactive);
 }
 
 @media (min-width: 768px) {
