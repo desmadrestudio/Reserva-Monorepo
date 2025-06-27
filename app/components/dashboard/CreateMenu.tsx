@@ -59,7 +59,13 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
     : (
         <div
           ref={buttonRef}
-          style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 40 }}
+          style={{
+            position: isMobile ? "fixed" : "absolute",
+            top: isMobile ? "0.75rem" : "1rem",
+            right: isMobile ? "0.75rem" : "1rem",
+            zIndex: 50,
+            pointerEvents: "auto",
+          }}
         >
           <Polaris.Button
             icon={PlusIcon}
