@@ -5,9 +5,10 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
-import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from "@shopify/polaris-icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "@shopify/polaris-icons";
 import DayTimeline from "~/components/dashboard/DayTimeline";
 import CreateMenu from "~/components/dashboard/CreateMenu";
+import CalendarCreateButton from "~/components/dashboard/CalendarCreateButton";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "~/services/appointment.server";
 import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
@@ -109,16 +110,8 @@ export default function CalendarPage() {
             titleMetadata={
                 <CreateMenu
                     selectedDate={selectedDate}
-                    renderTrigger={({ openMenu, triggerRef }) => (
-                        <div ref={triggerRef} style={{ position: "relative" }}>
-                            <Button
-                                icon={PlusIcon}
-                                variant="primary"
-                                size="slim"
-                                onClick={openMenu}
-                                accessibilityLabel="Create menu"
-                            />
-                        </div>
+                    renderTrigger={(props) => (
+                        <CalendarCreateButton {...props} />
                     )}
                 />
             }
