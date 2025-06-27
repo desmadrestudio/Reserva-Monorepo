@@ -85,7 +85,7 @@ import {
                 onChange={(range) => {
                   if (range?.start) setSelectedDate(range.start);
                 }}
-                selected={[{ start: selectedDate, end: selectedDate }]}
+                selected={{ start: selectedDate, end: selectedDate }}
                 disableDatesBefore={new Date()}
                 onMonthChange={() => {}}
               />
