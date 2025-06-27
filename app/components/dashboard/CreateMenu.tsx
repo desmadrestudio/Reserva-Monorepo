@@ -9,11 +9,15 @@ import {
 } from "@shopify/polaris-icons";
 import { useIsMobile } from "../../utils/useIsMobile";
 
-export default function CreateMenu({
-  selectedDate,
-}: {
+type CreateMenuProps = {
   selectedDate: Date;
-}) {
+  renderTrigger?: (args: {
+    openMenu: () => void;
+    triggerRef: React.RefObject<HTMLDivElement>;
+  }) => React.ReactNode;
+};
+
+export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuProps) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -47,25 +51,31 @@ export default function CreateMenu({
     },
   ];
 
+  const openMenu = () => setOpen(true);
+
   return (
     <>
-      <div
-        ref={buttonRef}
-        style={{
-          position: isMobile ? "fixed" : "absolute",
-          top: isMobile ? "0.5rem" : "1rem",
-          right: isMobile ? "0.5rem" : "1rem",
-          zIndex: 40,
-        }}
-      >
-        <Polaris.Button
-          icon={PlusIcon}
-          variant="primary"
-          size="slim"
-          onClick={() => setOpen(true)}
-          accessibilityLabel="Create menu"
-        />
-      </div>
+      {renderTrigger ? (
+        renderTrigger({ openMenu, triggerRef: buttonRef })
+      ) : (
+        <div
+          ref={buttonRef}
+          style={{
+            position: isMobile ? "fixed" : "absolute",
+            top: isMobile ? "0.5rem" : "1rem",
+            right: isMobile ? "0.5rem" : "1rem",
+            zIndex: 40,
+          }}
+        >
+          <Polaris.Button
+            icon={PlusIcon}
+            variant="primary"
+            size="slim"
+            onClick={openMenu}
+            accessibilityLabel="Create menu"
+          />
+        </div>
+      )}
       <Polaris.Sheet
         open={open}
         onClose={() => setOpen(false)}

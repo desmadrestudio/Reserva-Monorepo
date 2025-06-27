@@ -5,7 +5,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, Form, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
-import { ArrowLeftIcon, ArrowRightIcon } from "@shopify/polaris-icons";
+import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from "@shopify/polaris-icons";
 import DayTimeline from "~/components/dashboard/DayTimeline";
 import CreateMenu from "~/components/dashboard/CreateMenu";
 import { useState } from "react";
@@ -104,8 +104,25 @@ export default function CalendarPage() {
         setSelectedDate(new Date(selectedDate.getTime() + 86_400_000));
 
     return (
-        <Page title="Calendar & Manual Booking">
-            <CreateMenu selectedDate={selectedDate} />
+        <Page
+            title="Calendar & Manual Booking"
+            titleMetadata={
+                <CreateMenu
+                    selectedDate={selectedDate}
+                    renderTrigger={({ openMenu, triggerRef }) => (
+                        <div ref={triggerRef} style={{ position: "relative" }}>
+                            <Button
+                                icon={PlusIcon}
+                                variant="primary"
+                                size="slim"
+                                onClick={openMenu}
+                                accessibilityLabel="Create menu"
+                            />
+                        </div>
+                    )}
+                />
+            }
+        >
             <Layout>
                 {/* 📅 Date Picker */}
                 <Layout.Section>
