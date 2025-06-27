@@ -6,17 +6,14 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import {
-  AppProvider,
-  Frame,
-  Navigation,
-  type LinkLikeComponentProps,
-} from "@shopify/polaris";
+import * as Polaris from "@shopify/polaris";
 import { Link } from "@remix-run/react";
 import "@shopify/polaris/build/esm/styles.css";
 
 import styles from "./styles/global.css";
 import MobileTabBar from "./components/MobileTabBar";
+import { desktopNavigation } from "./config/navigation";
+import { useIsMobile } from "./utils/useIsMobile";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
@@ -35,12 +32,13 @@ const i18n = {
 };
 
 // ✅ Custom link component to integrate Remix with Polaris
-const CustomLink = ({ url, external, ...rest }: LinkLikeComponentProps) => {
+const CustomLink = ({ url, external, ...rest }: Polaris.LinkLikeComponentProps) => {
   if (external) return <a href={url} {...rest} />;
   return <Link to={url} {...rest} />;
 };
 
 export default function App() {
+  const isMobile = useIsMobile();
   return (
     <html lang="en">
       <head>
@@ -56,29 +54,20 @@ export default function App() {
       </head>
       <body>
         {/* ✅ Now Polaris will use Remix's Link for client-side nav */}
-        <AppProvider i18n={i18n} linkComponent={CustomLink}>
-          <Frame
+        <Polaris.AppProvider i18n={i18n} linkComponent={CustomLink}>
+          <Polaris.Frame
             navigation={
-              <Navigation location="/">
-                <Navigation.Section
-                  items={[
-                    { url: "/", label: "Home" },
-                    { url: "/dashboard/calendar", label: "Appointments" },
-                    { url: "/dashboard/items", label: "Items & Services" },
-                    { url: "/dashboard/customers", label: "Customers" },
-                    { url: "/dashboard/reports", label: "Reports" },
-                    { url: "/dashboard/settings", label: "Settings" },
-                  ]}
+              <Polaris.Navigation location="/">
+                <Polaris.Navigation.Section
+                  items={desktopNavigation}
                 />
-              </Navigation>
+              </Polaris.Navigation>
             }
           >
             <Outlet />
-            <div className="mobile-tab-bar">
-              <MobileTabBar />
-            </div>
-          </Frame>
-        </AppProvider>
+            {isMobile && <MobileTabBar />}
+          </Polaris.Frame>
+        </Polaris.AppProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
