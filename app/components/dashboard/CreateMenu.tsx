@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
+import { themeDefault } from "@shopify/polaris-tokens";
 import {
   PlusIcon,
   CalendarTimeIcon,
@@ -61,8 +62,8 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
           ref={buttonRef}
           style={{
             position: isMobile ? "fixed" : "absolute",
-            top: isMobile ? "0.75rem" : "1rem",
-            right: isMobile ? "0.75rem" : "1rem",
+            top: isMobile ? themeDefault.space["space-200"] : themeDefault.space["space-400"],
+            right: isMobile ? themeDefault.space["space-200"] : themeDefault.space["space-400"],
             zIndex: 50,
             pointerEvents: "auto",
           }}
@@ -70,9 +71,12 @@ export default function CreateMenu({ selectedDate, renderTrigger }: CreateMenuPr
           <Polaris.Button
             icon={PlusIcon}
             variant="primary"
+            size="slim"
             onClick={toggleMenu}
             accessibilityLabel="Create menu"
-          />
+          >
+            {!isMobile && "Create"}
+          </Polaris.Button>
         </div>
       );
 
