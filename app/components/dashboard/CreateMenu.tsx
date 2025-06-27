@@ -11,8 +11,13 @@ import { useIsMobile } from "../../utils/useIsMobile";
 
 export default function CreateMenu({
   selectedDate,
+  renderTrigger,
 }: {
   selectedDate: Date;
+  renderTrigger?: (
+    openMenu: () => void,
+    activatorRef: React.RefObject<HTMLDivElement>
+  ) => JSX.Element;
 }) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -47,25 +52,31 @@ export default function CreateMenu({
     },
   ];
 
+  const openMenu = () => setOpen(true);
+
   return (
     <>
-      <div
-        ref={buttonRef}
-        style={{
-          position: isMobile ? "fixed" : "absolute",
-          top: isMobile ? "0.5rem" : "1rem",
-          right: isMobile ? "0.5rem" : "1rem",
-          zIndex: 40,
-        }}
-      >
-        <Polaris.Button
-          icon={PlusIcon}
-          variant="primary"
-          size="slim"
-          onClick={() => setOpen(true)}
-          accessibilityLabel="Create menu"
-        />
-      </div>
+      {renderTrigger ? (
+        renderTrigger(openMenu, buttonRef)
+      ) : (
+        <div
+          ref={buttonRef}
+          style={{
+            position: isMobile ? "fixed" : "absolute",
+            top: isMobile ? "0.5rem" : "1rem",
+            right: isMobile ? "0.5rem" : "1rem",
+            zIndex: 40,
+          }}
+        >
+          <Polaris.Button
+            icon={PlusIcon}
+            variant="primary"
+            size="slim"
+            onClick={openMenu}
+            accessibilityLabel="Create menu"
+          />
+        </div>
+      )}
       <Polaris.Sheet
         open={open}
         onClose={() => setOpen(false)}
