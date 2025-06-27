@@ -105,7 +105,7 @@ export default function CalendarPage() {
 
     return (
         <Page
-            title="Calendar & Manual Booking"
+            title="Calendar"
             titleMetadata={
                 <CreateMenu
                     selectedDate={selectedDate}
