@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLocation } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { mobileNavigation, newAppointmentPath } from "../config/navigation";
@@ -8,7 +9,9 @@ import type { Location } from "@remix-run/react";
 export default function MobileTabBar() {
   const location: Location = useLocation();
   const isMobile = useIsMobile();
-  console.log("Rendering MobileTabBar");
+  useEffect(() => {
+    console.log("Rendering MobileTabBar");
+  }, []);
 
   if (!isMobile) return null;
 
@@ -55,3 +58,4 @@ export default function MobileTabBar() {
     </Polaris.Box>
   );
 }
+
