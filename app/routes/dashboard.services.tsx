@@ -1,11 +1,30 @@
 import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
+import { useCallback } from "react";
 import * as Polaris from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
 import { prisma } from "~/lib/prisma.server";
 
-const { Page, Layout, Card, TextField, Button, Banner, Text, Stack } = Polaris;
+const {
+  Page,
+  Layout,
+  Card,
+  TextField,
+  Button,
+  Banner,
+  Text,
+  Stack,
+  DropZone,
+  Select,
+  Checkbox,
+} = Polaris;
+
+const CATEGORIES = [
+  { label: "General", value: "general" },
+  { label: "Hair", value: "hair" },
+  { label: "Nails", value: "nails" },
+];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
@@ -19,8 +38,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await requireUserId(request);
   const formData = await request.formData();
   const name = formData.get("name")?.toString().trim();
-  const price = formData.get("price")?.toString();
+  const priceRaw = formData.get("price")?.toString();
   const duration = formData.get("duration")?.toString();
+  const notes = formData.get("notes")?.toString();
   const variantId = formData.get("variantId")?.toString() || undefined;
 
   if (!name || !duration) {
@@ -31,8 +51,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     data: {
       name,
       duration: Number(duration),
-      price: price ? Number(price) : undefined,
+      price: priceRaw ? Number(priceRaw.replace(/[^0-9.]/g, "")) : undefined,
       variantId,
+      notes,
     },
   });
 
@@ -43,13 +64,14 @@ export default function DashboardServices() {
   const { services } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
+  const handleDrop = useCallback(() => {}, []);
 
   return (
     <Page title="Manage Services">
       <Layout>
         <Layout.Section>
           <Card sectioned title="Add Service">
-            <Form method="post">
+            <Form method="post" encType="multipart/form-data">
               <Stack vertical spacing="tight">
                 {actionData?.error && (
                   <Banner status="critical">{actionData.error}</Banner>
@@ -57,10 +79,32 @@ export default function DashboardServices() {
                 {actionData?.success && (
                   <Banner status="success">Service added.</Banner>
                 )}
+                <DropZone label="Service image" onDrop={handleDrop}>
+                  <DropZone.FileUpload />
+                </DropZone>
                 <TextField label="Name" name="name" required />
-                <TextField label="Price" name="price" type="number" />
-                <TextField label="Duration (mins)" name="duration" type="number" required />
+                <Select
+                  label="Category"
+                  name="category"
+                  options={CATEGORIES}
+                  defaultValue="general"
+                />
+                <TextField label="Price" name="price" prefix="$" type="text" />
+                <Select
+                  label="Duration"
+                  name="duration"
+                  options={[
+                    { label: "15 min", value: "15" },
+                    { label: "30 min", value: "30" },
+                    { label: "45 min", value: "45" },
+                    { label: "60 min", value: "60" },
+                  ]}
+                />
+                <Checkbox label="Add Processing Time" name="processingTime" />
+                <Checkbox label="Block Extra Time" name="blockExtraTime" />
+                <Checkbox label="Requires Resource" name="requiresResource" />
                 <TextField label="Variant ID" name="variantId" />
+                <TextField label="Notes" name="notes" multiline />
                 <Button submit primary loading={navigation.state === "submitting"}>
                   Save
                 </Button>
