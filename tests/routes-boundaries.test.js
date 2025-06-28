@@ -24,7 +24,9 @@ const routes = [
   '../app/routes/appointments.new.tsx',
   '../app/routes/classes.new.tsx',
   '../app/routes/events.new.tsx',
-  '../app/routes/dashboard/checkout.tsx'
+  '../app/routes/dashboard/checkout.tsx',
+  '../app/routes/dashboard.services.tsx',
+  '../app/routes/public/booking/index.tsx'
 ];
 
 for (const route of routes) {
