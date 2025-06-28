@@ -3,18 +3,15 @@ import { useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
+import { prisma } from "~/lib/prisma.server";
 
 const { Page, Layout, Card, Text } = Polaris;
-
-const dummyDiscounts = [
-  { id: "d1", name: "Summer Sale" },
-  { id: "d2", name: "Black Friday" },
-];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  return json({ discounts: dummyDiscounts });
+  const discounts = await prisma.discount.findMany({ select: { id: true, name: true } });
+  return json({ discounts });
 };
 
 export default function DiscountsPage() {

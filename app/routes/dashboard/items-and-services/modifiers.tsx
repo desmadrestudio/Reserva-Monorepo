@@ -3,18 +3,15 @@ import { useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
+import { prisma } from "~/lib/prisma.server";
 
 const { Page, Layout, Card, Text } = Polaris;
-
-const dummyModifiers = [
-  { id: "m1", name: "Modifier A" },
-  { id: "m2", name: "Modifier B" },
-];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  return json({ modifiers: dummyModifiers });
+  const modifiers = await prisma.modifier.findMany({ select: { id: true, name: true } });
+  return json({ modifiers });
 };
 
 export default function ModifiersPage() {
