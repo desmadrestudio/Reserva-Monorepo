@@ -16,7 +16,8 @@ const routes = [
   '../app/routes/booking.start.tsx',
   '../app/routes/appointments.new.tsx',
   '../app/routes/classes.new.tsx',
-  '../app/routes/events.new.tsx'
+  '../app/routes/events.new.tsx',
+  '../app/routes/dashboard/checkout.tsx'
 ];
 
 for (const route of routes) {
