@@ -1,8 +1,10 @@
+// This route was migrated from a dot-route to a folder-based structure for better scalability.
 import { json, redirect, type LoaderFunction, type ActionFunction } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
 import { getProviders } from "~/utils/provider.server";
+import { createAppointment } from "~/services/appointment.server";
 
 const {
   Page,
@@ -35,6 +37,7 @@ export const action: ActionFunction = async ({ request }) => {
   const time = formData.get("time");
   const providerId = formData.get("providerId");
   const duration = formData.get("duration");
+  const notes = formData.get("notes");
 
   if (!customer || !date || !time || !providerId || !duration) {
     return json({ error: "Missing required fields" }, { status: 400 });
@@ -45,10 +48,19 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ error: "Invalid date" }, { status: 400 });
   }
 
+  await createAppointment({
+    date: parsedDate,
+    time: String(time),
+    customer: String(customer),
+    providerId: String(providerId),
+    service: String(duration),
+    notes: notes ? String(notes) : undefined,
+  });
+
   return redirect("/dashboard/calendar");
 };
 
-export default function NewClass() {
+export default function NewAppointment() {
   const { providers } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
 
@@ -61,7 +73,7 @@ export default function NewClass() {
   const [recurring, setRecurring] = useState(false);
 
   return (
-    <Page title="New Class">
+    <Page title="New Appointment">
       <Form method="post">
         <InlineStack align="end" gap="200">
           <Button url="/dashboard/calendar">Cancel</Button>

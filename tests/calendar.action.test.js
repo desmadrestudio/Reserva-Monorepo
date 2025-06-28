@@ -4,7 +4,7 @@ import test from 'node:test';
 // Dynamically import the service so we can stub createAppointment
 import * as appointmentService from '../app/services/appointment.server.js';
 
-const CALENDAR_MODULE = '../app/routes/dashboard.calendar.tsx';
+const CALENDAR_MODULE = '../app/routes/dashboard/calendar/index.tsx';
 
 // Helper to build a request with form data
 function buildRequest(data) {

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import DashboardServices, { action, loader } from '../app/routes/dashboard.services.tsx';
+import DashboardServices, { action, loader } from '../app/routes/dashboard/services/index.tsx';
 
 test('dashboard/services exports a component', () => {
   assert.equal(typeof DashboardServices, 'function');

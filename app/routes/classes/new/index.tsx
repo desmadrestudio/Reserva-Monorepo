@@ -1,3 +1,4 @@
+// This route was migrated from a dot-route to a folder-based structure for better scalability.
 import { json, redirect, type LoaderFunction, type ActionFunction } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
@@ -48,7 +49,7 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect("/dashboard/calendar");
 };
 
-export default function NewEvent() {
+export default function NewClass() {
   const { providers } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
 
@@ -61,7 +62,7 @@ export default function NewEvent() {
   const [recurring, setRecurring] = useState(false);
 
   return (
-    <Page title="New Personal Event">
+    <Page title="New Class">
       <Form method="post">
         <InlineStack align="end" gap="200">
           <Button url="/dashboard/calendar">Cancel</Button>
