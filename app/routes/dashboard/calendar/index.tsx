@@ -1,3 +1,4 @@
+// This route was migrated from a dot-route to a folder-based structure for better scalability.
 import {
     json,
     type LoaderFunction,
