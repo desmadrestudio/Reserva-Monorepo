@@ -27,17 +27,21 @@ export default function ChooseServicePage() {
   const currentStep = "service";
   const location = searchParams.get("location");
   const category = searchParams.get("category");
+  const preselectId = searchParams.get("serviceId");
 
   const availableServices = SERVICES[category as keyof typeof SERVICES] || [];
 
   useEffect(() => {
+    if (preselectId) {
+      setSelectedService(preselectId);
+    }
     if (!isStepEnabled(currentStep)) {
       const next = getNextStep(currentStep);
       if (next) {
         navigate(`/booking/${next}?location=${location}&category=${category}`);
       }
     }
-  }, []);
+  }, [preselectId]);
 
   const handleContinue = () => {
     const next = getNextStep(currentStep);

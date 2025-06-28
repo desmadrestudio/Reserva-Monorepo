@@ -1,42 +1,37 @@
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
-import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
 import { useState, useEffect } from "react";
+import { useNavigate, useNavigation, useRouteError, useSearchParams } from "@remix-run/react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
-const CATEGORIES = [
-  { id: "cat1", name: "Category 1" },
-  { id: "cat2", name: "Category 2" },
-  { id: "cat3", name: "Category 3" },
+const LOCATIONS = [
+  { id: "loc1", name: "Location 1" },
+  { id: "loc2", name: "Location 2" },
+  { id: "loc3", name: "Location 3" },
 ];
 
-export default function ChooseCategoryPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+export default function ChooseLocationPage() {
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const navigation = useNavigation();
 
-  const location = searchParams.get("location");
+  const currentStep = "location";
   const serviceId = searchParams.get("serviceId");
-  const currentStep = "category";
 
   useEffect(() => {
     if (!isStepEnabled(currentStep)) {
       const next = getNextStep(currentStep);
       if (next) {
-        const params = new URLSearchParams();
-        if (location) params.append("location", location);
-        if (serviceId) params.append("serviceId", serviceId);
-        navigate(`/booking/${next}?${params.toString()}`);
+        navigate(`/booking/${next}`);
       }
     }
   }, []);
 
   const handleContinue = () => {
     const next = getNextStep(currentStep);
-    if (location && selectedCategory && next) {
+    if (selectedLocation && next) {
       const params = new URLSearchParams();
-      params.append("location", location);
-      params.append("category", selectedCategory);
+      params.append("location", selectedLocation);
       if (serviceId) params.append("serviceId", serviceId);
       navigate(`/booking/${next}?${params.toString()}`);
     }
@@ -51,24 +46,24 @@ export default function ChooseCategoryPage() {
   }
 
   return (
-    <Page title="Choose Category">
+    <Page title="Start Your Booking">
       <Layout>
         <Layout.Section>
           <Card sectioned>
-            <Text variant="headingMd" as="h2">Choose a Service Category</Text>
+            <Text variant="headingMd" as="h2">Choose a Location</Text>
             <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "12px" }}>
-              {CATEGORIES.map((cat) => (
+              {LOCATIONS.map((loc) => (
                 <Button
-                  key={cat.id}
-                  outline={selectedCategory !== cat.id}
-                  primary={selectedCategory === cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
+                  key={loc.id}
+                  outline={selectedLocation !== loc.id}
+                  primary={selectedLocation === loc.id}
+                  onClick={() => setSelectedLocation(loc.id)}
                 >
-                  {cat.name}
+                  {loc.name}
                 </Button>
               ))}
             </div>
-            {selectedCategory && (
+            {selectedLocation && (
               <div style={{ marginTop: "2rem" }}>
                 <Button primary fullWidth onClick={handleContinue}>
                   Continue
