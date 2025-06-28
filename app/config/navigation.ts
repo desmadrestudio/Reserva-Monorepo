@@ -21,6 +21,7 @@ export interface NavigationItem {
 export const desktopNavigation: NavigationItem[] = [
   { label: "Home", url: "/", icon: HomeIcon },
   { label: "Appointments", url: "/dashboard/calendar", icon: CalendarIcon },
+  { label: "Checkout", url: "/dashboard/checkout", icon: PointOfSaleIcon },
   { label: "Items & Services", url: "/dashboard/items", icon: ProductIcon },
   { label: "Payments & Invoices", url: "/dashboard/payments", icon: CashDollarIcon },
   { label: "Customers", url: "/dashboard/customers", icon: PersonIcon },
