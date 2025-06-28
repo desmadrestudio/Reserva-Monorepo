@@ -1,116 +1,59 @@
-import {
-  Page,
-  Layout,
-  Card,
-  Text,
-  Button,
-  Stack,
-} from "@shopify/polaris";
-import {
-  useSearchParams,
-  useNavigation,
-  useRouteError,
-  useNavigate,
-} from "@remix-run/react";
+import { useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import * as Polaris from "@shopify/polaris";
 import { useBookingCart } from "~/components/BookingCartProvider";
-  
-  
-export default function ReviewBooking() {
-  const [searchParams] = useSearchParams();
-  const navigation = useNavigation();
+
+const { Page, Layout, Card, Button, Text, Stack } = Polaris;
+
+export default function ReviewCart() {
+  const { bookings, removeBooking } = useBookingCart();
   const navigate = useNavigate();
-  const { addBooking } = useBookingCart();
+  const navigation = useNavigation();
 
-  const service = searchParams.get("service");
-  const duration = searchParams.get("duration");
-  const staff = searchParams.get("staff");
-  const gender = searchParams.get("gender");
-  const date = searchParams.get("date");
-  const time = searchParams.get("time");
-  const addons = searchParams.getAll("addons");
+  if (navigation.state === "loading") {
+    return (
+      <Page>
+        <Card sectioned>Loading...</Card>
+      </Page>
+    );
+  }
 
-  const handleAddBooking = () => {
-    addBooking({
-      id: Date.now(),
-      serviceId: service ?? "",
-      title: service ?? "",
-      size: duration ?? "",
-      staff: staff ?? "",
-      gender: gender ?? "",
-      addons,
-      time: time ?? "",
-      date: date ?? "",
-    });
-    navigate("/booking/cart");
+  const handleContinue = () => {
+    navigate("/booking/contact");
   };
 
-  const formattedDate = date
-    ? new Date(date).toLocaleDateString(undefined, {
-        weekday: "long",
-        month: "short",
-        day: "numeric",
-      })
-    : "Not selected";
-
-    if (navigation.state === "loading") {
-      return (
-        <Page>
-          <Card sectioned>Loading...</Card>
-        </Page>
-      );
-    }
-  
   return (
     <Page title="Review Booking">
       <Layout>
-          <Layout.Section>
-            <Card sectioned title="You're Booking:">
+        <Layout.Section>
+          <Card sectioned>
+            {bookings.length === 0 ? (
+              <Text>No bookings in cart.</Text>
+            ) : (
               <Stack vertical spacing="tight">
-                <Text>
-                  <strong>Service:</strong> {service ?? "Not selected"}
-                </Text>
-                <Text>
-                  <strong>Duration:</strong> {duration ?? "Not selected"} mins
-                </Text>
-                <Text>
-                  <strong>Date:</strong> {formattedDate}
-                </Text>
-                <Text>
-                  <strong>Time:</strong> {time ?? "Not selected"}
-                </Text>
-                {staff && (
-                  <Text>
-                    <strong>Staff:</strong> {staff}
-                  </Text>
-                )}
-                {gender && gender !== "none" && (
-                  <Text>
-                    <strong>Gender Pref:</strong> {gender}
-                  </Text>
-                )}
-                {addons.length > 0 && (
-                  <Text>
-                    <strong>Add-ons:</strong> {addons.join(", ")}
-                  </Text>
-                )}
+                {bookings.map((booking) => (
+                  <Stack alignment="center" key={booking.id} spacing="tight">
+                    <Stack.Item fill>
+                      <Text>
+                        {booking.title} - {booking.date} {booking.time}
+                      </Text>
+                    </Stack.Item>
+                    <Button destructive onClick={() => removeBooking(booking.id)}>
+                      Remove
+                    </Button>
+                  </Stack>
+                ))}
               </Stack>
-            </Card>
-          </Layout.Section>
-  
-          <Layout.Section>
+            )}
+          </Card>
+          {bookings.length > 0 && (
             <Card sectioned>
-              <Button primary fullWidth onClick={handleAddBooking}>
-                Add to Booking
+              <Button primary fullWidth onClick={handleContinue}>
+                Proceed to Contact Info
               </Button>
             </Card>
-            <Card sectioned>
-              <Stack vertical spacing="tight">
-                <Button url="/booking/location">✅ Book Another Service</Button>
-                <Button primary url="/booking/cart">📦 View Cart</Button>
-              </Stack>
-            </Card>
-          </Layout.Section>
-        </Layout>
+          )}
+        </Layout.Section>
+      </Layout>
     </Page>
   );
 }
