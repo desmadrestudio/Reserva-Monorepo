@@ -42,6 +42,11 @@ export default function SettingsPage() {
                   </Polaris.Link>
                 </List.Item>
                 <List.Item>
+                  <Polaris.Link url="/dashboard/memberships">
+                    Memberships & Rewards
+                  </Polaris.Link>
+                </List.Item>
+                <List.Item>
                   <Polaris.Link url="/dashboard/online-booking">
                     Online Booking
                   </Polaris.Link>
