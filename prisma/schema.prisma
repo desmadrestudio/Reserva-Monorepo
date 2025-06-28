@@ -70,3 +70,45 @@ model Appointment {
 
   provider Provider @relation("ProviderAppointments", fields: [providerId], references: [id])
 }
+
+// Item available for booking or purchase
+model Item {
+  id   String @id @default(cuid())
+  name String
+}
+
+// Category grouping items or services
+model Category {
+  id   String @id @default(cuid())
+  name String
+}
+
+// Optional modifier for an item or service
+model Modifier {
+  id   String @id @default(cuid())
+  name String
+}
+
+// Discount applied to items or orders
+model Discount {
+  id   String @id @default(cuid())
+  name String
+}
+
+// Option for customisation
+model Option {
+  id   String @id @default(cuid())
+  name String
+}
+
+// Physical or virtual resource used in bookings
+model Resource {
+  id   String @id @default(cuid())
+  name String
+}
+
+// Unit of measurement
+model Unit {
+  id   String @id @default(cuid())
+  name String
+}

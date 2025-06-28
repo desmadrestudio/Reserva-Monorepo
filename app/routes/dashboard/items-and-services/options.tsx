@@ -3,18 +3,15 @@ import { useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
+import { prisma } from "~/lib/prisma.server";
 
 const { Page, Layout, Card, Text } = Polaris;
-
-const dummyOptions = [
-  { id: "o1", name: "Size" },
-  { id: "o2", name: "Color" },
-];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  return json({ options: dummyOptions });
+  const options = await prisma.option.findMany({ select: { id: true, name: true } });
+  return json({ options });
 };
 
 export default function OptionsPage() {

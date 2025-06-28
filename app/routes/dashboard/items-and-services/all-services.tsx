@@ -3,18 +3,15 @@ import { useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
+import { prisma } from "~/lib/prisma.server";
 
 const { Page, Layout, Card, Text } = Polaris;
-
-const dummyServices = [
-  { id: "s1", name: "Service One" },
-  { id: "s2", name: "Service Two" },
-];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  return json({ services: dummyServices });
+  const services = await prisma.service.findMany({ select: { id: true, name: true } });
+  return json({ services });
 };
 
 export default function AllServicesPage() {
