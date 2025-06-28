@@ -1,10 +1,18 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigate, useNavigation, useRouteError, useSearchParams } from "@remix-run/react";
+import {
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+  useRouteError,
+  useSearchParams,
+} from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
 import { useBookingCart } from "~/components/BookingCartProvider";
+import { getNextStep } from "~/utils/bookingFlow";
+import { BOOKING_FLOW } from "~/config/bookingFlow";
 
-const { Page, Layout, Card, Button, Text, Stack } = Polaris;
+const { Page, Layout, Card, Button, Text, Stack, EmptyState } = Polaris;
 
 export const loader = async (_args: LoaderFunctionArgs) => {
   const services = await prisma.service.findMany({
@@ -20,6 +28,9 @@ export default function PublicBookingIndex() {
   const navigation = useNavigation();
   const [searchParams] = useSearchParams();
 
+  const currentStep = "service";
+  const stepIndex = BOOKING_FLOW.indexOf(currentStep);
+
   function handleAdd(service: (typeof services)[number]) {
     addBooking({
       id: Date.now(),
@@ -32,8 +43,12 @@ export default function PublicBookingIndex() {
       time: "",
       date: "",
     });
-    const multi = searchParams.get("multi");
-    navigate(multi === "true" ? "/booking/cart" : "/booking/review");
+    const next = getNextStep(currentStep);
+    if (next) {
+      const params = new URLSearchParams(searchParams);
+      params.set("service", service.id);
+      navigate(`/booking/${next}?${params.toString()}`);
+    }
   }
 
   if (navigation.state === "loading") {
@@ -48,28 +63,43 @@ export default function PublicBookingIndex() {
     <Page title="Book a Service">
       <Layout>
         <Layout.Section>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-              gap: "1rem",
-            }}
-          >
-            {services.map((svc) => (
-              <Card key={svc.id} sectioned>
-                <Stack vertical spacing="tight">
-                  <Text variant="headingSm" as="h3">
-                    {svc.name}
-                  </Text>
-                  <Text>{svc.price ? `$${svc.price.toFixed(2)}` : "$0.00"}</Text>
-                  <Text>{svc.duration} mins</Text>
-                  <Button primary onClick={() => handleAdd(svc)}>
-                    Add to Booking
-                  </Button>
-                </Stack>
-              </Card>
-            ))}
-          </div>
+          <Card sectioned>
+            <Stack vertical spacing="tight">
+              <Text as="p" variant="bodyMd">
+                Step {stepIndex + 1} of {BOOKING_FLOW.length}
+              </Text>
+              {services.length === 0 ? (
+                <EmptyState heading="No services available">
+                  <p>Please check back later.</p>
+                </EmptyState>
+              ) : (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: "1rem",
+                  }}
+                >
+                  {services.map((svc) => (
+                    <Card key={svc.id} sectioned>
+                      <Stack vertical spacing="tight">
+                        <Text variant="headingSm" as="h3">
+                          {svc.name}
+                        </Text>
+                        <Text>
+                          {svc.price ? `$${svc.price.toFixed(2)}` : "$0.00"}
+                        </Text>
+                        <Text>{svc.duration} mins</Text>
+                        <Button primary onClick={() => handleAdd(svc)}>
+                          Add to Booking
+                        </Button>
+                      </Stack>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </Stack>
+          </Card>
         </Layout.Section>
       </Layout>
     </Page>
