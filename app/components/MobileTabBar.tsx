@@ -14,7 +14,7 @@ const tabs = [
   { label: "Checkout", path: "/dashboard/checkout", icon: PointOfSaleIcon },
   { label: "Book", path: "/appointments/new", icon: PlusIcon },
   { label: "Customers", path: "/dashboard/customers", icon: PersonIcon },
-  { label: "More", path: "/dashboard/settings", icon: MenuHorizontalIcon },
+  { label: "More", path: "/dashboard/more", icon: MenuHorizontalIcon },
 ];
 
 export default function MobileTabBar() {
