@@ -12,7 +12,7 @@ import "@shopify/polaris/build/esm/styles.css";
 
 import styles from "./styles/global.css";
 import MobileTabBar from "./components/MobileTabBar";
-import { desktopNavigation } from "./config/navigation";
+import { desktopNavigation } from "./config/sidebarMenu.config";
 import { CartProvider } from "./components/CartProvider";
 import { BookingCartProvider } from "./components/BookingCartProvider";
 
