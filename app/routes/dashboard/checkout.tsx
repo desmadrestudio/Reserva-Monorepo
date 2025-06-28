@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function Checkout() {
   const navigation = useNavigation();
-  const { items } = useCart();
+  const { cartItems } = useCart();
 
   return (
     <Page title="Checkout">
@@ -56,14 +56,14 @@ export default function Checkout() {
           <Layout.Section>
             <Card sectioned>
               <Text variant="headingMd">Cart Items</Text>
-              {items.length === 0 ? (
+              {cartItems.length === 0 ? (
                 <Text>No items in cart</Text>
               ) : (
-                items.map((item, idx) => (
+                cartItems.map((item, idx) => (
                   <Text key={idx}>{item.title} × {item.quantity}</Text>
                 ))
               )}
-              <input type="hidden" name="cart" value={JSON.stringify(items)} />
+              <input type="hidden" name="cart" value={JSON.stringify(cartItems)} />
               <Button primary submit loading={navigation.state === "submitting"}>
                 Checkout
               </Button>
