@@ -12,7 +12,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ shopName: "Marbella's Massage" });
 };
 
-export default function MorePage() {
+export default function SettingsPage() {
   const { shopName } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
 
@@ -25,7 +25,7 @@ export default function MorePage() {
   }
 
   return (
-    <Page title="More">
+    <Page title="Settings">
       <Layout>
         <Layout.Section>
           <Card sectioned>

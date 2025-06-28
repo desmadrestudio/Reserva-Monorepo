@@ -27,17 +27,17 @@ export default function ItemsAndServicesIndex() {
     <Page title="Items & Services">
       <Layout>
         <Layout.Section>
-          <Navigation location="/dashboard/items-and-services">
+          <Navigation location="/dashboard/items">
             <Navigation.Section
               items={[
-                { url: "/dashboard/items-and-services/all-items", label: "All Items" },
-                { url: "/dashboard/items-and-services/all-services", label: "All Services" },
-                { url: "/dashboard/items-and-services/resources", label: "Resources" },
-                { url: "/dashboard/items-and-services/categories", label: "Categories" },
-                { url: "/dashboard/items-and-services/modifiers", label: "Modifiers" },
-                { url: "/dashboard/items-and-services/discounts", label: "Discounts" },
-                { url: "/dashboard/items-and-services/options", label: "Options" },
-                { url: "/dashboard/items-and-services/units", label: "Units" },
+                { url: "/dashboard/items/all-items", label: "All Items" },
+                { url: "/dashboard/items/all-services", label: "All Services" },
+                { url: "/dashboard/items/resources", label: "Resources" },
+                { url: "/dashboard/items/categories", label: "Categories" },
+                { url: "/dashboard/items/modifiers", label: "Modifiers" },
+                { url: "/dashboard/items/discounts", label: "Discounts" },
+                { url: "/dashboard/items/options", label: "Options" },
+                { url: "/dashboard/items/units", label: "Units" },
               ]}
             />
           </Navigation>
