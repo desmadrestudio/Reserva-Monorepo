@@ -13,6 +13,7 @@ import "@shopify/polaris/build/esm/styles.css";
 import styles from "./styles/global.css";
 import MobileTabBar from "./components/MobileTabBar";
 import { desktopNavigation } from "./config/navigation";
+import { CartProvider } from "./components/CartProvider";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
@@ -52,20 +53,22 @@ export default function App() {
       </head>
       <body>
         {/* ✅ Now Polaris will use Remix's Link for client-side nav */}
-        <Polaris.AppProvider i18n={i18n} linkComponent={CustomLink}>
-          <Polaris.Frame
-            navigation={
-              <Polaris.Navigation location="/">
-                <Polaris.Navigation.Section
-                  items={desktopNavigation}
-                />
-              </Polaris.Navigation>
-            }
-          >
-            <Outlet />
-            <MobileTabBar />
-          </Polaris.Frame>
-        </Polaris.AppProvider>
+        <CartProvider>
+          <Polaris.AppProvider i18n={i18n} linkComponent={CustomLink}>
+            <Polaris.Frame
+              navigation={
+                <Polaris.Navigation location="/">
+                  <Polaris.Navigation.Section
+                    items={desktopNavigation}
+                  />
+                </Polaris.Navigation>
+              }
+            >
+              <Outlet />
+              <MobileTabBar />
+            </Polaris.Frame>
+          </Polaris.AppProvider>
+        </CartProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
