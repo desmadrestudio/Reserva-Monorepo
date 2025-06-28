@@ -27,6 +27,15 @@ const routes = [
   '../app/routes/events.new.tsx',
   '../app/routes/dashboard/checkout.tsx',
   '../app/routes/dashboard.services.tsx',
+  '../app/routes/dashboard/items-and-services/index.tsx',
+  '../app/routes/dashboard/items-and-services/all-items.tsx',
+  '../app/routes/dashboard/items-and-services/all-services.tsx',
+  '../app/routes/dashboard/items-and-services/resources.tsx',
+  '../app/routes/dashboard/items-and-services/categories.tsx',
+  '../app/routes/dashboard/items-and-services/modifiers.tsx',
+  '../app/routes/dashboard/items-and-services/discounts.tsx',
+  '../app/routes/dashboard/items-and-services/options.tsx',
+  '../app/routes/dashboard/items-and-services/units.tsx',
   '../app/routes/public/booking/index.tsx'
 ];
 
