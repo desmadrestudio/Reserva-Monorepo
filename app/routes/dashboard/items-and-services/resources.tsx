@@ -1,21 +1,57 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
+import {
+  json,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
+import {
+  Form,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+  useRouteError,
+} from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
 import { prisma } from "~/lib/prisma.server";
 
-const { Page, Layout, Card, Text } = Polaris;
+const { Page, Layout, Card, TextField, Button, Banner, Text } = Polaris;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  const resources = await prisma.resource.findMany({ select: { id: true, name: true } });
-  return json({ resources });
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id") || undefined;
+  const [resources, resource] = await Promise.all([
+    prisma.resource.findMany({ select: { id: true, name: true } }),
+    id ? prisma.resource.findUnique({ where: { id } }) : Promise.resolve(null),
+  ]);
+  return json({ resources, resource });
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  await authenticate.admin(request);
+  await requireUserId(request);
+  const formData = await request.formData();
+  const id = formData.get("id")?.toString();
+  const name = formData.get("name")?.toString().trim();
+
+  if (!name) {
+    return json({ error: "Name is required" }, { status: 400 });
+  }
+
+  if (id) {
+    await prisma.resource.update({ where: { id }, data: { name } });
+  } else {
+    await prisma.resource.create({ data: { name } });
+  }
+
+  return json({ success: true });
 };
 
 export default function ResourcesPage() {
-  const { resources } = useLoaderData<typeof loader>();
+  const { resources, resource } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
 
   if (navigation.state === "loading") {
@@ -30,9 +66,27 @@ export default function ResourcesPage() {
     <Page title="Resources">
       <Layout>
         <Layout.Section>
+          <Card sectioned title={resource ? "Edit Resource" : "Add Resource"}>
+            <Form method="post">
+              {actionData?.error && (
+                <Banner status="critical">{actionData.error}</Banner>
+              )}
+              {actionData?.success && (
+                <Banner status="success">Saved.</Banner>
+              )}
+              <input type="hidden" name="id" value={resource?.id ?? ""} />
+              <TextField label="Name" name="name" defaultValue={resource?.name} required />
+              <Button submit primary loading={navigation.state === "submitting"}>Save</Button>
+            </Form>
+          </Card>
           <Card sectioned title="Resources">
             {resources.map((res) => (
-              <Text key={res.id}>{res.name}</Text>
+              <Text key={res.id} as="span">
+                {res.name}{" "}
+                <Button url={`?id=${res.id}`} size="slim">
+                  Edit
+                </Button>
+              </Text>
             ))}
           </Card>
         </Layout.Section>

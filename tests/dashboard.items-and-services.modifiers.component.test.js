@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import ModifiersPage from '../app/routes/dashboard/items-and-services/modifiers.tsx';
+import * as route from '../app/routes/dashboard/items-and-services/modifiers.tsx';
 
-test('dashboard/items-and-services/modifiers exports a component', () => {
-  assert.equal(typeof ModifiersPage, 'function');
+test('dashboard/items-and-services/modifiers exports handlers', () => {
+  assert.equal(typeof route.default, 'function');
+  assert.equal(typeof route.action, 'function');
 });
