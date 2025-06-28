@@ -1,15 +1,19 @@
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
-import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import { useSearchParams, useNavigate, useNavigation, useRouteError, useLoaderData } from "@remix-run/react";
 import { useState, useEffect } from "react";
+import { prisma } from "~/lib/prisma.server";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
-const CATEGORIES = [
-  { id: "cat1", name: "Category 1" },
-  { id: "cat2", name: "Category 2" },
-  { id: "cat3", name: "Category 3" },
-];
+export const loader = async (_args: LoaderFunctionArgs) => {
+  const categories = await prisma.category.findMany({
+    select: { id: true, name: true },
+  });
+  return json({ categories });
+};
 
 export default function ChooseCategoryPage() {
+  const { categories } = useLoaderData<typeof loader>();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -57,7 +61,7 @@ export default function ChooseCategoryPage() {
           <Card sectioned>
             <Text variant="headingMd" as="h2">Choose a Service Category</Text>
             <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "12px" }}>
-              {CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <Button
                   key={cat.id}
                   outline={selectedCategory !== cat.id}

@@ -1,24 +1,22 @@
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
-import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import { useSearchParams, useNavigate, useNavigation, useRouteError, useLoaderData } from "@remix-run/react";
 import { useState, useEffect } from "react";
+import { prisma } from "~/lib/prisma.server";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
-const SERVICES = {
-  cat1: [
-    { id: "svc1", name: "Service A1" },
-    { id: "svc2", name: "Service A2" },
-  ],
-  cat2: [
-    { id: "svc3", name: "Service B1" },
-    { id: "svc4", name: "Service B2" },
-  ],
-  cat3: [
-    { id: "svc5", name: "Service C1" },
-    { id: "svc6", name: "Service C2" },
-  ],
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const category = url.searchParams.get("category") || undefined;
+  const services = await prisma.service.findMany({
+    where: category ? { category } : undefined,
+    select: { id: true, name: true },
+  });
+  return json({ services });
 };
 
 export default function ChooseServicePage() {
+  const { services } = useLoaderData<typeof loader>();
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -29,7 +27,7 @@ export default function ChooseServicePage() {
   const category = searchParams.get("category");
   const preselectId = searchParams.get("serviceId");
 
-  const availableServices = SERVICES[category as keyof typeof SERVICES] || [];
+  const availableServices = services;
 
   useEffect(() => {
     if (preselectId) {
