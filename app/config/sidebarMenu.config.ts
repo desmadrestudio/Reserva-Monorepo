@@ -1,3 +1,6 @@
+// This file defines the left-hand sidebar menu items for desktop/dashboard views.
+// It does NOT power the mobile nav (see MobileTabBar.tsx).
+
 import type { IconProps } from "@shopify/polaris";
 import {
   HomeIcon,

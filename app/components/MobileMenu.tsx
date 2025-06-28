@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import * as Polaris from "@shopify/polaris";
 import { MenuHorizontalIcon } from "@shopify/polaris-icons";
-import { desktopNavigation } from "../config/navigation";
+import { desktopNavigation } from "../config/sidebarMenu.config";
 import { useIsMobile } from "../utils/useIsMobile";
 
 export default function MobileMenu() {
