@@ -14,6 +14,7 @@ const routes = [
   '../app/routes/booking.staff.tsx',
   '../app/routes/booking.review.tsx',
   '../app/routes/booking.confirm.tsx',
+  '../app/routes/booking.cart.tsx',
   '../app/routes/booking.start.tsx',
   '../app/routes/appointments.new.tsx',
   '../app/routes/classes.new.tsx',
