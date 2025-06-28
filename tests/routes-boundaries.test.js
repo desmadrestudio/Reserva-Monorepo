@@ -6,7 +6,7 @@ const routes = [
   '../app/routes/dashboard.tsx',
   '../app/routes/dashboard.appointments.tsx',
   '../app/routes/dashboard.calendar.tsx',
-  '../app/routes/dashboard/more.tsx',
+  '../app/routes/dashboard/more/index.tsx',
   '../app/routes/booking.addons.tsx',
   '../app/routes/booking.category.tsx',
   '../app/routes/booking.duration.tsx',
