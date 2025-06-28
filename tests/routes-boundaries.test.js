@@ -18,6 +18,8 @@ const routes = [
   '../app/routes/booking/contact.tsx',
   '../app/routes/booking/checkout.tsx',
   '../app/routes/booking.start.tsx',
+  '../app/routes/booking/index.tsx',
+  '../app/routes/services.tsx',
   '../app/routes/appointments.new.tsx',
   '../app/routes/classes.new.tsx',
   '../app/routes/events.new.tsx',
