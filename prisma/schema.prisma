@@ -37,11 +37,12 @@ model Provider {
 
 // ✅ Bookable service
 model Service {
-  id       String  @id @default(cuid())
-  name     String
-  duration Int
-  price    Float?
-  notes    String?
+  id        String  @id @default(cuid())
+  name      String
+  duration  Int
+  price     Float?
+  notes     String?
+  variantId String?
 }
 
 // ✅ Weekly availability for a provider
