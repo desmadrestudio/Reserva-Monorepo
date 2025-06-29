@@ -1,4 +1,6 @@
 // Helper to fetch from Shopify Storefront API
+const API_VERSION = '2025-04';
+
 export async function shopifyFetch({ query, variables }: { query: string; variables?: Record<string, any>; }) {
   const domain = process.env.SHOPIFY_DOMAIN;
   const token = process.env.SHOPIFY_STOREFRONT_TOKEN;
@@ -7,7 +9,7 @@ export async function shopifyFetch({ query, variables }: { query: string; variab
     throw new Error("Missing Shopify environment variables");
   }
 
-  const response = await fetch(`https://${domain}/api/2024-04/graphql.json`, {
+  const response = await fetch(`https://${domain}/api/${API_VERSION}/graphql.json`, {
     method: "POST",
     headers: {
       "X-Shopify-Storefront-Access-Token": token,
