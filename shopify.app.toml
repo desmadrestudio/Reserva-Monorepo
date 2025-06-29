@@ -1,4 +1,4 @@
-# shopify.app.toml – Declarative App Capabilities for Reserva
+# shopify.app.toml
 
 client_id = "6da5cf4e97ca05474c28ac842c585747"
 application_url = "https://nursery-freelance-sorry-personality.trycloudflare.com"
@@ -9,18 +9,6 @@ embedded = true
 [access_scopes]
 scopes = "read_products,write_products"
 
-# 🧭 Admin UI Navigation Links (Declarative)
-[[extensions]]
-type = "admin_link"
-title = "Dashboard"
-url = "/dashboard"
-
-[[extensions]]
-type = "admin_link"
-title = "Book Appointment"
-url = "/appointments/new"
-
-# 🔐 Redirect URIs for OAuth
 [auth]
 redirect_urls = [
   "https://nursery-freelance-sorry-personality.trycloudflare.com/auth/callback",
@@ -28,7 +16,6 @@ redirect_urls = [
   "https://nursery-freelance-sorry-personality.trycloudflare.com/api/auth/callback"
 ]
 
-# 📦 Webhooks (Declarative)
 [webhooks]
 api_version = "2025-04"
 
@@ -40,8 +27,10 @@ api_version = "2025-04"
   topics = ["app/uninstalled"]
   uri = "/webhooks/app/uninstalled"
 
-# ⚙️ Dev Settings
 [build]
 automatically_update_urls_on_dev = true
 include_config_on_deploy = true
 dev_store_url = "test-booking-spa.myshopify.com"
+
+[pos]
+embedded = false
