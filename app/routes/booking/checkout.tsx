@@ -1,7 +1,7 @@
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { Form, useNavigation, useSearchParams, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
-import { useBookingCart } from "~/components/BookingCartProvider";
+import { useBookingCart } from "~/ui/BookingCartProvider"; // 🔄 updated path after ui refactor
 import { shopifyFetch } from "~/lib/shopify.server";
 import { prisma } from "~/lib/prisma.server";
 
