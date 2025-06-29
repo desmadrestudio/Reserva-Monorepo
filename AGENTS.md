@@ -2,7 +2,10 @@
 
 You are working inside a Shopify App using Remix, Polaris, and Prisma.
 
+---
+
 ## ✳️ Do
+
 - Use `@shopify/polaris` for all UI — import as:  
   `import * as Polaris from "@shopify/polaris"`
 - Structure every page inside:  
@@ -12,25 +15,32 @@ You are working inside a Shopify App using Remix, Polaris, and Prisma.
 - Use Prisma schema from:  
   `apps/reserva-ui/prisma/schema.prisma`
 - Default DB is SQLite (file-based)
-- Use `typeof window !== "undefined"` to safely guard browser-only logic
+- Use `typeof window !== "undefined"` to guard browser-only logic
+- For nested routes, use a parent `layout.tsx` file exporting `<Outlet />`
+- Route folders must include an `index.tsx` for default path
+
+---
 
 ## 🚫 Don’t
-- ❌ Don't use Tailwind, Bootstrap, or raw HTML unless explicitly requested
-- ❌ Don’t use SSR-only packages (like ReactDOM/server) that break in Shopify Admin
-- ❌ Don’t assume `window` or `document` is available during server rendering
+
+- ❌ Don’t use Tailwind, Bootstrap, or raw HTML unless explicitly requested
+- ❌ Don’t use SSR-only packages like `react-dom/server` (Shopify Admin breaks)
+- ❌ Don’t assume `window` or `document` is available on the server
 
 ---
 
 ## 🧠 Prompt Examples for Codex/Copilot
 
-- ✅ “Can you review the structure of `/services` and suggest improvements?”
-- ✅ “Check which components use `react-calendar` and lazy-load them correctly”
-- ✅ “Clean up unused dependencies and imports”
-- ✅ “Split up this file for readability and testability”
-- ✅ “Are there any SSR risks in this file?”
+- ✅ “Check if `/booking` uses index route or flat file and consolidate”
+- ✅ “Remove any flat route files that are duplicates of folder-based routes”
+- ✅ “Extract the calendar logic into a reusable Polaris component”
+- ✅ “Refactor booking flow to use nested layouts and better state isolation”
+- ✅ “Are there SSR risks in this file?”
 - ✅ “Show me all Prisma queries touching the `Appointment` model”
 
 ---
 
 ## 📌 If unsure...
-Leave a `TODO:` comment or write to `/app/TODO.md` and Codex will check it on next run.
+
+Leave a `TODO:` comment or write to `/app/TODO.md`  
+Codex will check it on the next run.
