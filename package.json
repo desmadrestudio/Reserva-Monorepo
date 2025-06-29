@@ -22,7 +22,7 @@
     "check:deploy": "./scripts/post-deploy-check.sh"
   },
   "engines": {
-    "node": "^18.20 || ^20.10 || >=21.0.0"
+    "node": ">=18.0.0 <19"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
