@@ -1,19 +1,20 @@
 # 🛀 Reserva – Shopify Booking App (Polaris + Remix)
 
-Reserva is a full-stack Shopify booking app using **Remix**, **Shopify Polaris**, and **Prisma ORM**. It supports calendar-based bookings, session management, and Shopify OAuth. Built with scalability, agent automation, and a clean monorepo layout.
+Reserva is a full-stack Shopify booking app using **Remix**, **Shopify Polaris**, and **Prisma ORM**. It supports calendar-based bookings, session management, and Shopify OAuth. Built for scalability, developer speed, and AI-powered automation.
 
 ---
 
 ## 🧱 Tech Stack
 
-| Layer       | Tool/Framework                   |
-|-------------|----------------------------------|
-| Frontend    | Remix v2 + Vite                  |
-| UI          | Shopify Polaris (No Tailwind)    |
-| Backend     | Node.js + Prisma ORM             |
-| DB          | SQLite (Dev) / PostgreSQL (Prod) |
-| Auth        | Shopify OAuth + Sessions         |
-| Deployment  | Local / Render (recommended)     |
+| Layer        | Tool/Framework                   |
+|--------------|----------------------------------|
+| Frontend     | Remix v2 + Vite                  |
+| UI           | Shopify Polaris (No Tailwind)    |
+| Backend      | Node.js + Prisma ORM             |
+| Database     | SQLite (Dev) / PostgreSQL (Prod) |
+| Auth         | Shopify OAuth + Sessions         |
+| Deployment   | Render / Local                   |
+| Dev Tools    | ESLint, Prettier, Codex/Copilot  |
 
 ---
 
@@ -25,16 +26,18 @@ Reserva is a full-stack Shopify booking app using **Remix**, **Shopify Polaris**
 │   └── reserva-ui/
 │       ├── app/                  # Remix app logic
 │       │   ├── lib/              # prisma.server.ts, shopify.server.ts
-│       │   ├── components/       # Polaris components
-│       │   ├── routes/           # Route handlers
-│       │   └── styles/           # App CSS (if needed)
-│       ├── prisma/               # Prisma schema + migrations
+│       │   ├── ui/               # All UI components (was 'components')
+│       │   │   ├── dashboard.ui/
+│       │   │   └── shared/
+│       │   ├── routes/           # File-based routes
+│       │   └── styles/           # Global CSS
+│       ├── prisma/               # Prisma schema & migrations
 │       └── public/               # Static assets
-├── extensions/                   # Future Shopify app extensions (POS, checkout, etc.)
-├── packages/                     # Shared UI/components (optional)
-├── .env                          # Environment config
-├── README.md
-└── ...
+├── extensions/                   # Future Shopify app extensions
+├── packages/                     # Shared libraries (optional)
+├── AGENTS.md                     # AI agent conventions
+├── .env                          # Environment variables
+└── README.md
 ```
 
 ---
@@ -57,13 +60,11 @@ npx prisma migrate dev --name init
 npm run dev
 ```
 
-Then visit `http://localhost:3000`
+Then visit: `http://localhost:3000`
 
 ---
 
 ## 🔐 .env Variables
-
-Create `.env` file in `apps/reserva-ui` with:
 
 ```env
 SHOPIFY_API_KEY=your-key
@@ -77,68 +78,42 @@ DATABASE_URL="file:./dev.sqlite"
 
 ## 🧠 AI Automation Rules (Codex/Copilot)
 
-- ✅ Use **Polaris only** for all UI. No Tailwind.
-- 🔁 Keep everything scoped to `/apps/reserva-ui`
-- 📚 Use `/app/lib/prisma.server.ts` for accessing Prisma Client
-- 🧬 Prisma schema lives in `/apps/reserva-ui/prisma/schema.prisma`
-- 🔒 Don’t delete or overwrite files unless told
-- 🧩 Reuse existing patterns and follow `/app/components/` layout
-- ⚠️ SSR safety: Use `typeof window !== "undefined"` for client-only logic
-- ❗ Avoid SSR-only packages like `react-dom/server` in embedded Shopify Admin
-- 📋 If unsure, leave a `TODO:` and log it in `TODO.md`
+- ✅ Use **Polaris only** for UI (no Tailwind)
+- 📁 All UI goes into `/app/ui/`
+- 📚 Access DB via `lib/prisma.server.ts`
+- 🔬 Schema is in `/prisma/schema.prisma`
+- 🔒 SSR-safe: Guard browser logic with `typeof window !== "undefined"`
+- ⚠️ Avoid SSR-only packages
+- 🧩 Follow Remix's loader/action + file-based routing
+- 📎 If unsure, leave a TODO or write to `app/TODO.md`
 
 ---
-
-## 📌 Prisma Schema
-
-Located in: `apps/reserva-ui/prisma/schema.prisma`
-
-```prisma
-model Appointment {
-  id        String   @id @default(cuid())
-  shop      String
-  date      DateTime
-  time      String
-  customer  String
-  notes     String?
-  createdAt DateTime @default(now())
-}
-
-model Session {
-  id            String    @id
-  shop          String
-  state         String
-  isOnline      Boolean   @default(false)
-  scope         String?
-  expires       DateTime?
-  accessToken   String
-  userId        BigInt?
-  firstName     String?
-  lastName      String?
-  email         String?
-  accountOwner  Boolean   @default(false)
-  locale        String?
-  collaborator  Boolean?  @default(false)
-  emailVerified Boolean?  @default(false)
-}
-```
-
----
-
-## 🧪 Local Development Commands
-
-```bash
-npm run dev                   # Start local server
-npx prisma generate           # Generate Prisma client
-npx prisma migrate dev        # Run migrations
-npx prisma studio             # Visual DB browser
-```
 
 ## 🌐 Declarative App Configuration
 
-This app uses Shopify's Declarative App Capabilities. Update `shopify.app.toml`
-to change OAuth scopes or add Admin UI links. Push config changes with
-`npx shopify app config push`.
+Shopify Declarative App Capabilities (`DAC`) are defined in:
+
+```toml
+# shopify.app.toml
+[access_scopes]
+scopes = "read_products,write_products"
+
+[[extensions]]
+type = "admin_link"
+title = "Dashboard"
+url = "/dashboard"
+
+[[extensions]]
+type = "admin_link"
+title = "Book Appointment"
+url = "/appointments/new"
+```
+
+Push updates with:
+
+```bash
+npx shopify app config push
+```
 
 ---
 
@@ -168,24 +143,27 @@ export default function Dashboard() {
 
 ## 📅 Booking Flow (MVP Goals)
 
-- [x] Prisma + Polaris stack working
+- [x] Polaris + Prisma stack initialized
+- [x] OAuth setup with embedded admin
 - [ ] Month calendar with booking count
-- [ ] View daily bookings on click
-- [ ] Create new booking with modal
-- [ ] Search/filter by customer
-- [ ] Show upcoming bookings below calendar
+- [ ] View bookings by day
+- [ ] Create appointment via modal
+- [ ] Filter/search by customer
+- [ ] Confirm flow for staff assignment
 
 ---
 
-## 🧠 Tips for Agents (Codex/Copilot)
+## 🧪 Local Dev Commands
 
-- All Polaris UI code lives in `/app/components/`
-- Data fetching uses `lib/prisma.server.ts`
-- Follow Remix loader/action conventions
-- Never assume Tailwind is available
-- Bookings are always scoped by `shop`
+```bash
+npm run dev                 # Start dev server
+npx prisma generate         # Generate Prisma client
+npx prisma migrate dev      # Run migrations
+npx prisma studio           # DB browser
+```
 
 ---
+
 ## 🛡 License
 
 © 2025 Desmadre Studio. All rights reserved.  
