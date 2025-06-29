@@ -8,7 +8,7 @@ import {
 } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
-import { useBookingCart } from "~/components/BookingCartProvider";
+import { useBookingCart } from "~/ui/BookingCartProvider"; // 🔄 updated path after ui refactor
 import { getNextStep } from "~/utils/bookingFlow";
 import { BOOKING_FLOW } from "~/config/bookingFlow";
 

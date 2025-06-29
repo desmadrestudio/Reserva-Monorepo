@@ -7,7 +7,7 @@ import { useLoaderData, Form } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
 import { getAppointments, createAppointment } from "~/services/appointment.server";
-import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
+import UpcomingAppointmentsCard from "~/ui/dashboard.ui/UpcomingAppointmentsCard"; // 🔄 updated path after ui refactor
 
 const {
   Page,

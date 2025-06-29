@@ -7,11 +7,11 @@ import {
 import { useLoaderData, Form, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { ArrowLeftIcon, ArrowRightIcon } from "@shopify/polaris-icons";
-import DayTimeline from "~/components/dashboard/DayTimeline";
-import CreateMenu from "~/components/dashboard/CreateMenu";
+import DayTimeline from "~/ui/dashboard.ui/DayTimeline"; // 🔄 updated path after ui refactor
+import CreateMenu from "~/ui/dashboard.ui/CreateMenu"; // 🔄 updated path after ui refactor
 import { useState } from "react";
 import { getAppointments, createAppointment } from "~/services/appointment.server";
-import UpcomingAppointmentsCard from "~/components/dashboard/UpcomingAppointmentsCard";
+import UpcomingAppointmentsCard from "~/ui/dashboard.ui/UpcomingAppointmentsCard"; // 🔄 updated path after ui refactor
 
 const {
     Page,

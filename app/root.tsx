@@ -11,10 +11,10 @@ import { Link } from "@remix-run/react";
 import "@shopify/polaris/build/esm/styles.css";
 
 import styles from "./styles/global.css";
-import MobileTabBar from "./components/MobileTabBar";
+import MobileTabBar from "./ui/MobileTabBar"; // 🔄 updated path after ui refactor
 import { desktopNavigation } from "./config/sidebarMenu.config";
-import { CartProvider } from "./components/CartProvider";
-import { BookingCartProvider } from "./components/BookingCartProvider";
+import { CartProvider } from "./ui/CartProvider"; // 🔄 updated path after ui refactor
+import { BookingCartProvider } from "./ui/BookingCartProvider"; // 🔄 updated path after ui refactor
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },

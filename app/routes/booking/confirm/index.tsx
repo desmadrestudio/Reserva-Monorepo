@@ -1,6 +1,6 @@
 import { useNavigate, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
-import { useCart } from "~/components/CartProvider";
+import { useCart } from "~/ui/CartProvider"; // 🔄 updated path after ui refactor
 
 const { Page, Layout, Card, Button } = Polaris;
 

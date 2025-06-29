@@ -2,7 +2,7 @@ import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from
 import { Form, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
-import { useCart } from "~/components/CartProvider";
+import { useCart } from "~/ui/CartProvider"; // 🔄 updated path after ui refactor
 import { requireUserId } from "~/utils/auth.server";
 
 const { Page, Layout, Card, Text, Button } = Polaris;

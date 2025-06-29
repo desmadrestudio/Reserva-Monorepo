@@ -2,7 +2,7 @@ import { Page, Layout, Card } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
-import AddOnsCard, { AddOn } from "~/components/booking/AddOnsCard";
+import AddOnsCard, { AddOn } from "~/ui/booking/AddOnsCard"; // 🔄 updated path after ui refactor
 
 // 🧪 Mock Add-ons
 const ADDONS = [
