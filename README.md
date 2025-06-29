@@ -134,6 +134,12 @@ npx prisma migrate dev        # Run migrations
 npx prisma studio             # Visual DB browser
 ```
 
+## 🌐 Declarative App Configuration
+
+This app uses Shopify's Declarative App Capabilities. Update `shopify.app.toml`
+to change OAuth scopes or add Admin UI links. Push config changes with
+`npx shopify app config push`.
+
 ---
 
 ## 💄 Polaris UI Example

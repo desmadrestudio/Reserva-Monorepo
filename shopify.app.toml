@@ -1,19 +1,33 @@
-# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+# Shopify app configuration for Reserva
+# Update the Declarative App Capabilities (DAC) here
 
 client_id = "6da5cf4e97ca05474c28ac842c585747"
+application_url = "https://nursery-freelance-sorry-personality.trycloudflare.com"
+
+[app]
 name = "Reserva App"
 handle = "reserva-app"
-application_url = "https://nursery-freelance-sorry-personality.trycloudflare.com"
-embedded = true
+embed = true
+
+[access_scopes]
+# OAuth scopes required by the app. These are also set via SCOPES env var.
+scopes = "read_products,write_products"
+
+# Admin UI links
+[[extensions]]
+type = "admin_link"
+title = "Dashboard"
+url = "/dashboard"
+
+[[extensions]]
+type = "admin_link"
+title = "Book Appointment"
+url = "/appointments/new"
 
 [build]
 automatically_update_urls_on_dev = true
 dev_store_url = "test-booking-spa.myshopify.com"
 include_config_on_deploy = true
-
-[access_scopes]
-# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
 
 [auth]
 redirect_urls = [
@@ -26,11 +40,11 @@ redirect_urls = [
 api_version = "2025-04"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/scopes_update" ]
+  topics = ["app/scopes_update"]
   uri = "/webhooks/app/scopes_update"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/uninstalled" ]
+  topics = ["app/uninstalled"]
   uri = "/webhooks/app/uninstalled"
 
 [pos]
