@@ -3,7 +3,7 @@ import test from 'node:test';
 
 const routes = [
   '../app/routes/dashboard/index.tsx',
-  '../app/routes/dashboard.tsx',
+  '../app/routes/dashboard/layout.tsx',
   '../app/routes/dashboard/appointments/index.tsx',
   '../app/routes/dashboard/calendar/index.tsx',
   '../app/routes/dashboard/settings/index.tsx',
