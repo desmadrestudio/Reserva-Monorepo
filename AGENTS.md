@@ -12,8 +12,8 @@ You are working inside a Shopify App using Remix, Polaris, and Prisma.
   `<Page> → <Layout> → <Card>`
 - Use Prisma client from:  
   `app/lib/prisma.server.ts`
-- Use Prisma schema from:  
-  `apps/reserva-ui/prisma/schema.prisma`
+ - Use Prisma schema from:
+  `prisma/schema.prisma`
 - Default DB is SQLite (file-based)
 - Use `typeof window !== "undefined"` to guard browser-only logic
 - For nested routes, use a parent `layout.tsx` file exporting `<Outlet />`
