@@ -9,6 +9,11 @@ embedded = true
 [access_scopes]
 scopes = "read_products,write_products"
 
+[[extensions]]
+type = "admin_link"
+title = "Dashboard"
+url = "/dashboard"
+
 [auth]
 redirect_urls = [
   "https://nursery-freelance-sorry-personality.trycloudflare.com/auth/callback",
