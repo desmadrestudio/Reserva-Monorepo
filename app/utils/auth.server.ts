@@ -3,6 +3,6 @@ import { redirect } from '@remix-run/node';
 
 export async function requireUserId(request: Request) {
   const { session } = await authenticate.admin(request);
-  if (!session) throw redirect('/login');
+  if (!session) throw redirect('/auth/login');
   return session.shop;
 }
