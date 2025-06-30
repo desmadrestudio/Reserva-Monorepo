@@ -14,6 +14,11 @@ type = "admin_link"
 title = "Dashboard"
 url = "/dashboard"
 
+[[extensions]]
+type = "admin_link"
+title = "Bookings"
+url = "/bookings"
+
 [auth]
 redirect_urls = [
   "https://nursery-freelance-sorry-personality.trycloudflare.com/auth/callback",
