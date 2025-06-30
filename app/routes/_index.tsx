@@ -34,7 +34,7 @@ export default function Home() {
               <Link to="/dashboard">
                 <Button primary>Go to Dashboard</Button>
               </Link>
-              <Link to="/dashboard/calendar">
+              <Link to="/appointments/new">
                 <Button>Book New Appointment</Button>
               </Link>
               <Link to="/dashboard/appointments">
