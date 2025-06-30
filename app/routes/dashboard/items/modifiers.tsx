@@ -4,18 +4,18 @@ import {
   type LoaderFunctionArgs,
 } from "@remix-run/node";
 import {
-  Form,
   useActionData,
   useLoaderData,
   useNavigation,
   useRouteError,
 } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
+import CrudFormCard from "~/ui/CrudFormCard";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
 import { prisma } from "~/lib/prisma.server";
 
-const { Page, Layout, Card, TextField, Button, Banner, Text } = Polaris;
+const { Page, Layout, Card } = Polaris;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
@@ -66,29 +66,16 @@ export default function ModifiersPage() {
     <Page title="Modifiers">
       <Layout>
         <Layout.Section>
-          <Card sectioned title={modifier ? "Edit Modifier" : "Add Modifier"}>
-            <Form method="post">
-              {actionData?.error && (
-                <Banner status="critical">{actionData.error}</Banner>
-              )}
-              {actionData?.success && (
-                <Banner status="success">Saved.</Banner>
-              )}
-              <input type="hidden" name="id" value={modifier?.id ?? ""} />
-              <TextField label="Name" name="name" defaultValue={modifier?.name} required />
-              <Button submit primary loading={navigation.state === "submitting"}>Save</Button>
-            </Form>
-          </Card>
-          <Card sectioned title="Modifiers">
-            {modifiers.map((mod) => (
-              <Text key={mod.id} as="span">
-                {mod.name}{" "}
-                <Button url={`?id=${mod.id}`} size="slim">
-                  Edit
-                </Button>
-              </Text>
-            ))}
-          </Card>
+          <CrudFormCard
+            items={modifiers}
+            item={modifier}
+            singular="Modifier"
+            plural="Modifiers"
+            fieldName="name"
+            fieldLabel="Name"
+            actionData={actionData}
+            submitting={navigation.state === "submitting"}
+          />
         </Layout.Section>
       </Layout>
     </Page>
