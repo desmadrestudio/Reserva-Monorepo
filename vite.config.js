@@ -64,7 +64,7 @@ export default defineConfig({
         v3_throwAbortReason: true,
         v3_lazyRouteDiscovery: true,
         v3_singleFetch: false,
-        v3_routeConfig: true,
+        // Use classic file-based routing
       },
     }),
     tsconfigPaths(),
