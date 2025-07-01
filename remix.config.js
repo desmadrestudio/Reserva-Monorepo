@@ -1,3 +1,5 @@
+import { flatRoutes } from "@remix-run/fs-routes";
+
 export default {
   future: {
     v3_fetcherPersist: true,
@@ -7,4 +9,5 @@ export default {
     v3_singleFetch: false,
     v3_routeConfig: true,
   },
+  routes: () => flatRoutes(),
 };
