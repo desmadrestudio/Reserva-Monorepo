@@ -22,7 +22,7 @@ const routes = [
   '../app/routes/booking/start/index.tsx',
   '../app/routes/booking/index.tsx',
   '../app/routes/services.tsx',
-  '../app/routes/appointments/new/index.tsx',
+  '../app/routes/appointments.new._index.tsx',
   '../app/routes/classes/new/index.tsx',
   '../app/routes/events/new/index.tsx',
   '../app/routes/dashboard/checkout.tsx',
