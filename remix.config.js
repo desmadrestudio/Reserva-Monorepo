@@ -5,6 +5,6 @@ export default {
     v3_throwAbortReason: true,
     v3_lazyRouteDiscovery: true,
     v3_singleFetch: false,
-    // Use classic file-based routing so nested `index.tsx` routes work
+    v3_routeConfig: true,
   },
 };
