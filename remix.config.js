@@ -1,5 +1,3 @@
-import { flatRoutes } from "@remix-run/fs-routes";
-
 export default {
   future: {
     v3_fetcherPersist: true,
@@ -7,7 +5,6 @@ export default {
     v3_throwAbortReason: true,
     v3_lazyRouteDiscovery: true,
     v3_singleFetch: false,
-    v3_routeConfig: true,
+    // Use classic file-based routing so nested `index.tsx` routes work
   },
-  routes: async () => flatRoutes(),
 };
