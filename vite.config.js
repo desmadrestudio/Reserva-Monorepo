@@ -3,6 +3,7 @@ import { installGlobals } from "@remix-run/node";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import path from "path";
+import getRoutes from "./app/routes.js";
 
 installGlobals({ nativeFetch: true });
 
@@ -38,7 +39,9 @@ if (host === "localhost") {
   };
 }
 
-export default defineConfig({
+export default defineConfig(async () => {
+  const routes = await getRoutes();
+  return {
   server: {
     allowedHosts: [host],
     cors: {
@@ -58,6 +61,7 @@ export default defineConfig({
   plugins: [
     remix({
       ignoredRouteFiles: ["**/.*"],
+      routes: async () => routes,
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
@@ -78,4 +82,5 @@ export default defineConfig({
   ssr: {
     noExternal: ['@shopify/polaris'],
   },
+};
 });
