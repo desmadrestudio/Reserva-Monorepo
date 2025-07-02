@@ -1,2 +1,2 @@
-- [ ] Investigate missing nested routes when using `flatRoutes` in `app/routes.ts`.
-      `/appointments/new` folder isn't discovered; consider converting to dot-route files or updating the route config using `defineRoutes`.
+- [ ] Convert any remaining dot-route components to folder-based routes if needed.
+- [x] Removed custom `app/routes.ts` that used `flatRoutes`. Remix now auto-discovers nested routes.
