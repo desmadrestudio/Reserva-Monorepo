@@ -9,15 +9,6 @@ embedded = true
 [access_scopes]
 scopes = "read_products,write_products"
 
-[[extensions]]
-type = "admin_link"
-title = "Dashboard"
-url = "/dashboard"
-
-[[extensions]]
-type = "admin_link"
-title = "Bookings"
-url = "/bookings"
 
 [auth]
 redirect_urls = [
