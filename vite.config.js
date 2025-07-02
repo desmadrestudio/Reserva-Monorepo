@@ -63,10 +63,10 @@ export default defineConfig(() => {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
-        v3_lazyRouteDiscovery: false,
+        v3_lazyRouteDiscovery: true,
         v3_singleFetch: false,
-        v3_routeConfig: true,
-        // Use classic file-based routing
+        v3_routeConfig: false,
+        // Enable folder-based routing
       },
     }),
     tsconfigPaths(),
