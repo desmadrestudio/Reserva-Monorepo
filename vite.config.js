@@ -3,7 +3,6 @@ import { installGlobals } from "@remix-run/node";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import path from "path";
-import getRoutes from "./app/routes.js";
 
 installGlobals({ nativeFetch: true });
 
@@ -39,8 +38,7 @@ if (host === "localhost") {
   };
 }
 
-export default defineConfig(async () => {
-  const routes = await getRoutes();
+export default defineConfig(() => {
   return {
   server: {
     allowedHosts: [host],
@@ -61,13 +59,13 @@ export default defineConfig(async () => {
   plugins: [
     remix({
       ignoredRouteFiles: ["**/.*"],
-      routes: async () => routes,
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
-        v3_lazyRouteDiscovery: true,
+        v3_lazyRouteDiscovery: false,
         v3_singleFetch: false,
+        v3_routeConfig: true,
         // Use classic file-based routing
       },
     }),
