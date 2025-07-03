@@ -18,6 +18,7 @@
     "generate": "shopify app generate",
     "deploy": "shopify app deploy",
     "env": "shopify app env",
+    "test": "tsx node --test",
     "check:sanity": "./scripts/sanity-check.sh",
     "check:deploy": "./scripts/post-deploy-check.sh"
   },
@@ -56,7 +57,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2",
-    "vite": "^6.2.2"
+    "vite": "^6.2.2",
+    "tsx": "^4.8.1"
   },
   "workspaces": [
     "extensions/*"
