@@ -157,6 +157,7 @@ export default function Dashboard() {
 
 ```bash
 npm run dev                 # Start dev server
+npm run test                # Run unit tests
 npx prisma generate         # Generate Prisma client
 npx prisma migrate dev      # Run migrations
 npx prisma studio           # DB browser
