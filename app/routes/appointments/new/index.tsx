@@ -1,4 +1,3 @@
-// This route was migrated from a dot-route to a folder-based structure for better scalability.
 import { json, redirect, type LoaderFunction, type ActionFunction } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
