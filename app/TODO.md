@@ -1,2 +1,2 @@
 - [ ] Convert any remaining dot-route components to folder-based routes if needed.
-- [x] Removed custom `app/routes.ts` that used `flatRoutes`. Remix now auto-discovers nested routes.
+- [x] Restored `app/routes.ts` using `flatRoutes` to ensure nested routes work until Remix auto-discovery is reliable.

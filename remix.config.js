@@ -7,5 +7,6 @@ export default {
     v3_lazyRouteDiscovery: false,
     v3_singleFetch: false,
     v3_routeConvention: true,
+    v3_routeConfig: true,
   },
 };
