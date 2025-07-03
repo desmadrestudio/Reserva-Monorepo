@@ -31,15 +31,13 @@ export default function Home() {
                 flexWrap: "wrap",
               }}
             >
-              <Link to="/dashboard">
-                <Button primary>Go to Dashboard</Button>
-              </Link>
-              <Link to="/appointments/new">
-                <Button>Book New Appointment</Button>
-              </Link>
-              <Link to="/dashboard/appointments">
-                <Button plain>View All Appointments</Button>
-              </Link>
+              <Button url="/dashboard" primary>
+                Go to Dashboard
+              </Button>
+              <Button url="/appointments/new">Book New Appointment</Button>
+              <Button url="/dashboard/appointments" plain>
+                View All Appointments
+              </Button>
             </div>
           </Card>
         </Layout.Section>
