@@ -1,6 +1,6 @@
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { json, type LoaderFunction } from "@remix-run/node";
-import { useLoaderData, Link } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import type { V2_MetaFunction } from "@remix-run/node";
 
 export const meta: V2_MetaFunction = () => {
@@ -39,6 +39,24 @@ export default function Home() {
                 View All Appointments
               </Button>
             </div>
+          </Card>
+        </Layout.Section>
+      </Layout>
+    </Page>
+  );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return (
+    <Page title="Error">
+      <Layout>
+        <Layout.Section>
+          <Card sectioned>
+            <Text variant="headingMd" as="h2">
+              Something went wrong
+            </Text>
+            <pre>{error.message}</pre>
           </Card>
         </Layout.Section>
       </Layout>
