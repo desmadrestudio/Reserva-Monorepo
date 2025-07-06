@@ -66,7 +66,7 @@ export default defineConfig(() => {
         v3_lazyRouteDiscovery: false,
         v3_singleFetch: false,
         v3_routeConvention: true,
-        v3_routeConfig: true,
+        v3_routeConfig: false,
       },
     }),
     tsconfigPaths(),
