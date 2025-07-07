@@ -39,7 +39,7 @@ export default function SettingsPage() {
               <List>
                 <List.Item>
                   <Polaris.Link url="/dashboard/services">
-                    Items & Services
+                    Services
                   </Polaris.Link>
                 </List.Item>
                 <List.Item>

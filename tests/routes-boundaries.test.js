@@ -33,7 +33,6 @@ const routes = [
   '../app/routes/dashboard/reports/index.tsx',
   '../app/routes/dashboard/items/index.tsx',
   '../app/routes/dashboard/items/all-items.tsx',
-  '../app/routes/dashboard/items/all-services.tsx',
   '../app/routes/dashboard/items/resources.tsx',
   '../app/routes/dashboard/items/categories.tsx',
   '../app/routes/dashboard/items/modifiers.tsx',
