@@ -1,7 +1,16 @@
-import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
-import { json, type LoaderFunction } from "@remix-run/node";
+import * as Polaris from "@shopify/polaris";
+import { json, type LoaderFunction, type LinksFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import type { V2_MetaFunction } from "@remix-run/node";
+import { useState } from "react";
+import Calendar from "react-calendar";
+import calendarStyles from "react-calendar/dist/Calendar.css?url";
+
+const { Page, Layout, Card, Button, Text } = Polaris;
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: calendarStyles },
+];
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: "Reserva Home" }];
@@ -13,6 +22,7 @@ export const loader: LoaderFunction = async () => {
 
 export default function Home() {
   const data = useLoaderData<{ userName: string }>();
+  const [date, setDate] = useState<Date | Date[]>(new Date());
 
   return (
     <Page title="Reserva Home">
@@ -38,6 +48,21 @@ export default function Home() {
               <Button url="/dashboard/appointments" plain>
                 View All Appointments
               </Button>
+            </div>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <Card sectioned>
+            <div
+              style={{
+                width: "100%",
+                maxWidth: "420px",
+                margin: "0 auto",
+              }}
+            >
+              {typeof window !== "undefined" && (
+                <Calendar value={date} onChange={setDate} />
+              )}
             </div>
           </Card>
         </Layout.Section>
