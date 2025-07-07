@@ -26,7 +26,7 @@ export const navigationItems: NavigationItem[] = [
   { label: "Home", url: "/", icon: HomeIcon },
   { label: "Appointments", url: "/dashboard/calendar", icon: CalendarIcon },
   { label: "Checkout", url: "/dashboard/checkout", icon: PointOfSaleIcon },
-  { label: "Items & Services", url: "/dashboard/items", icon: ProductIcon },
+  { label: "Services", url: "/dashboard/services", icon: ProductIcon },
   { label: "Memberships & Rewards", url: "/dashboard/memberships", icon: GiftCardIcon },
   { label: "Payments & Invoices", url: "/dashboard/payments", icon: CashDollarIcon },
   { label: "Customers", url: "/dashboard/customers", icon: PersonIcon },

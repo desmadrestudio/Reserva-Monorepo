@@ -31,7 +31,6 @@ export default function ItemsAndServicesIndex() {
             <Navigation.Section
               items={[
                 { url: "/dashboard/items/all-items", label: "All Items" },
-                { url: "/dashboard/items/all-services", label: "All Services" },
                 { url: "/dashboard/items/resources", label: "Resources" },
                 { url: "/dashboard/items/categories", label: "Categories" },
                 { url: "/dashboard/items/modifiers", label: "Modifiers" },
