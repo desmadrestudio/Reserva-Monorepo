@@ -52,19 +52,16 @@ export default function Home() {
           </Card>
         </Layout.Section>
         <Layout.Section>
-          <Card sectioned>
-            <div
-              style={{
-                width: "100%",
-                maxWidth: "420px",
-                margin: "0 auto",
-              }}
-            >
+          <div style={{ overflowX: "auto" }}>
+            <Card sectioned>
               {typeof window !== "undefined" && (
                 <Calendar value={date} onChange={setDate} />
               )}
-            </div>
-          </Card>
+              <Text variant="bodySm" as="p">
+                Selected date: {Array.isArray(date) ? date.join(" to ") : date.toDateString()}
+              </Text>
+            </Card>
+          </div>
         </Layout.Section>
       </Layout>
     </Page>
