@@ -1,7 +1,7 @@
 # shopify.app.toml
 
 client_id = "6da5cf4e97ca05474c28ac842c585747"
-application_url = "https://nursery-freelance-sorry-personality.trycloudflare.com"
+application_url = "https://camcorder-computation-candles-challenges.trycloudflare.com"
 name = "Reserva App"
 handle = "reserva-app"
 embedded = true
@@ -11,11 +11,7 @@ scopes = "read_products,write_products"
 
 
 [auth]
-redirect_urls = [
-  "https://nursery-freelance-sorry-personality.trycloudflare.com/auth/callback",
-  "https://nursery-freelance-sorry-personality.trycloudflare.com/auth/shopify/callback",
-  "https://nursery-freelance-sorry-personality.trycloudflare.com/api/auth/callback"
-]
+redirect_urls = ["https://camcorder-computation-candles-challenges.trycloudflare.com/auth/callback", "https://camcorder-computation-candles-challenges.trycloudflare.com/auth/shopify/callback", "https://camcorder-computation-candles-challenges.trycloudflare.com/api/auth/callback"]
 
 [webhooks]
 api_version = "2025-04"
