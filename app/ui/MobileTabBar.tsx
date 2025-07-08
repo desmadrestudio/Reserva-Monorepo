@@ -12,7 +12,7 @@ import type { Location } from "@remix-run/react";
 const tabs = [
   { label: "Calendar", path: "dashboard/calendar", icon: CalendarIcon },
   { label: "Checkout", path: "dashboard/checkout", icon: PointOfSaleIcon },
-  { label: "Book", path: "appointments/new", icon: PlusIcon },
+  { label: "Book", path: "/apps/reserva-app/appointments/new", icon: PlusIcon },
   { label: "Customers", path: "dashboard/customers", icon: PersonIcon },
   { label: "More", path: "dashboard/settings", icon: MenuHorizontalIcon },
 ];

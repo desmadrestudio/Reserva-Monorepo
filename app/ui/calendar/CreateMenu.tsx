@@ -26,7 +26,7 @@ export default function CreateMenu({
       prefix: <Polaris.Icon source={CalendarTimeIcon} />,
       onAction: () => {
         setOpen(false);
-        navigate(`/appointments/new?date=${dateParam}`);
+        navigate(`/apps/reserva-app/appointments/new?date=${dateParam}`);
       },
     },
     {
