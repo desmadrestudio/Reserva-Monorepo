@@ -144,7 +144,7 @@ export default function Index() {
                     App Bridge
                   </Link>{" "}
                   examples like an{" "}
-                  <Link url="/app/additional" removeUnderline>
+                  <Link url="app/additional" removeUnderline>
                     additional page
                   </Link>{" "}
                   and an{" "}

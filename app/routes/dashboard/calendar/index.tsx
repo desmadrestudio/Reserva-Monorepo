@@ -156,7 +156,7 @@ export default function CalendarPage() {
                 {/* 📝 Manual Booking Form */}
                 <Layout.Section>
                     <LegacyCard sectioned title="Book New Appointment">
-                        <Form method="post" action="/dashboard/calendar">
+                        <Form method="post" action="dashboard/calendar">
                             <input
                                 type="hidden"
                                 name="date"

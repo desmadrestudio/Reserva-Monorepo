@@ -45,4 +45,4 @@ export const mobileNavigation: NavigationItem[] = [
   { label: "More", url: "dashboard/settings", icon: MenuHorizontalIcon },
 ];
 
-export const newAppointmentPath = "/appointments/new";
+export const newAppointmentPath = "appointments/new";

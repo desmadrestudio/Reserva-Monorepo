@@ -17,7 +17,7 @@ export default function ConfirmBooking() {
       quantity: 1,
       variantId: "gid://shopify/ProductVariant/123",
     });
-    navigate("/dashboard/checkout");
+    navigate("dashboard/checkout");
   };
 
   if (navigation.state === "loading") {
