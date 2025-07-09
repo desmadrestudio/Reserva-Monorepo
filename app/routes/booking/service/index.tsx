@@ -90,7 +90,7 @@ export default function ChooseServicePage() {
               </div>
             )}
             <div style={{ marginTop: "1rem" }}>
-              <Button url="booking/service-picker?multi=true" fullWidth>
+              <Button url="/booking/service-picker?multi=true" fullWidth>
                 Browse All Services
               </Button>
             </div>

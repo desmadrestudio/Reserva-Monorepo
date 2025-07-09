@@ -8,6 +8,7 @@ import {
   NoteAddIcon,
 } from "@shopify/polaris-icons";
 import { useIsMobile } from "../../utils/useIsMobile";
+import { getAppUrl } from "../../utils/url";
 
 export default function CreateMenu({
   selectedDate,
@@ -26,7 +27,7 @@ export default function CreateMenu({
       prefix: <Polaris.Icon source={CalendarTimeIcon} />,
       onAction: () => {
         setOpen(false);
-        navigate(`/apps/reserva-app/appointments/new?date=${dateParam}`);
+        navigate(`${getAppUrl("/appointments/new")}?date=${dateParam}`);
       },
     },
     {

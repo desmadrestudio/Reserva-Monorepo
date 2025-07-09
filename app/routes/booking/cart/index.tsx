@@ -18,7 +18,7 @@ export default function BookingCartPage() {
   }
 
   const handleContinue = () => {
-    navigate("booking/contact");
+    navigate("/booking/contact");
   };
 
   return (

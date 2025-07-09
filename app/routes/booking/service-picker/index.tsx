@@ -33,7 +33,7 @@ export default function ServicePicker() {
       date: "",
     });
     const multi = searchParams.get("multi");
-    navigate(multi === "true" ? "booking/cart" : "booking/review");
+    navigate(multi === "true" ? "/booking/cart" : "/booking/review");
   }
 
   if (navigation.state === "loading") {
