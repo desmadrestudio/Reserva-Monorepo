@@ -14,7 +14,11 @@ const shopify = shopifyApp({
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
   apiVersion: API_VERSION,
   scopes: process.env.SCOPES?.split(","),
-  appUrl: process.env.SHOPIFY_APP_URL || "",
+  // Default to localhost if SHOPIFY_APP_URL or BASE_URL are not defined.
+  appUrl:
+    process.env.SHOPIFY_APP_URL ||
+    process.env.BASE_URL ||
+    "http://localhost:3000",
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
