@@ -23,8 +23,9 @@ export default async function handleRequest(
   const callbackName = isbot(userAgent ?? "") ? "onAllReady" : "onShellReady";
 
   return new Promise((resolve, reject) => {
+    const remixUrl = new URL(request.url).pathname.replace(BASENAME, "");
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer basename={BASENAME} context={remixContext} url={request.url} />,
+      <RemixServer basename={BASENAME} context={remixContext} url={remixUrl} />,
       {
         [callbackName]: () => {
           const body = new PassThrough();
