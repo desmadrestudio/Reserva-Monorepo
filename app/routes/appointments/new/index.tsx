@@ -4,6 +4,7 @@ import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
 import { getProviders } from "~/utils/provider.server";
 import { createAppointment } from "~/services/appointment.server";
+import { getAppUrl } from "~/utils/url";
 
 const {
   Page,
@@ -56,7 +57,7 @@ export const action: ActionFunction = async ({ request }) => {
     notes: notes ? String(notes) : undefined,
   });
 
-  return redirect("/dashboard/calendar");
+  return redirect(getAppUrl("/dashboard/calendar"));
 };
 
 export default function NewAppointment() {
@@ -75,7 +76,7 @@ export default function NewAppointment() {
     <Page title="New Appointment">
       <Form method="post">
         <InlineStack align="end" gap="200">
-          <Button url="dashboard/calendar">Cancel</Button>
+          <Button url="/dashboard/calendar">Cancel</Button>
           <Button primary submit loading={navigation.state === "submitting"}>Save</Button>
         </InlineStack>
         <Layout>

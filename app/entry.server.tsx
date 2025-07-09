@@ -7,6 +7,7 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { EntryContext } from "@remix-run/node";
 import { isbot } from "isbot";
 import { addDocumentResponseHeaders } from "./shopify.server";
+import { BASENAME } from "./utils/url";
 
 export const streamTimeout = 5000;
 
@@ -23,7 +24,7 @@ export default async function handleRequest(
 
   return new Promise((resolve, reject) => {
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer context={remixContext} url={request.url} />,
+      <RemixServer basename={BASENAME} context={remixContext} url={request.url} />,
       {
         [callbackName]: () => {
           const body = new PassThrough();
