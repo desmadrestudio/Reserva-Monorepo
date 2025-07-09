@@ -6,18 +6,26 @@ You are working inside a Shopify App using Remix, Polaris, and Prisma.
 
 ## ✳️ Do
 
-- Use `@shopify/polaris` for all UI — import as:  
-  `import * as Polaris from "@shopify/polaris"`
-- Structure every page inside:  
+- Use `@shopify/polaris` for all UI — import components directly:  
+  ```ts
+  import { Page, Layout, Card } from "@shopify/polaris"
+  ```
+- Structure every Polaris page as:  
   `<Page> → <Layout> → <Card>`
-- Use Prisma client from:  
+- Use the Prisma client from:  
   `app/lib/prisma.server.ts`
- - Use Prisma schema from:
+- Use the Prisma schema from:  
   `prisma/schema.prisma`
-- Default DB is SQLite (file-based)
-- Use `typeof window !== "undefined"` to guard browser-only logic
-- For nested routes, use a parent `layout.tsx` file exporting `<Outlet />`
-- Route folders must include an `index.tsx` for default path
+- Default dev database is SQLite (file-based)
+- Guard browser-only logic with:
+  ```ts
+  if (typeof window !== "undefined") {
+    // browser-safe logic here
+  }
+  ```
+- Use `layout.tsx` only in route folders that require nested layout behavior.  
+  Prefer shared layouts in `/app/components/layout/` and inject via `root.tsx`.
+- All route folders **must** contain an `index.tsx` for default path exposure
 
 ---
 
@@ -25,7 +33,7 @@ You are working inside a Shopify App using Remix, Polaris, and Prisma.
 
 - ❌ Don’t use Tailwind, Bootstrap, or raw HTML unless explicitly requested
 - ❌ Don’t use SSR-only packages like `react-dom/server` (Shopify Admin breaks)
-- ❌ Don’t assume `window` or `document` is available on the server
+- ❌ Don’t access `window` or `document` in `loader()` or `action()` functions
 
 ---
 
@@ -37,10 +45,23 @@ You are working inside a Shopify App using Remix, Polaris, and Prisma.
 - ✅ “Refactor booking flow to use nested layouts and better state isolation”
 - ✅ “Are there SSR risks in this file?”
 - ✅ “Show me all Prisma queries touching the `Appointment` model”
+- ✅ “Check for layout.tsx shadowing root layout”
+- ✅ “Collapse any folders that contain only `index.tsx`”
+- ✅ “Audit SSR safety across all route loader() functions”
+
+---
+
+## 📡 Codex Watches These Files:
+
+- `AGENTS.md`
+- `TODO.md`
+- `routes/` (structure and file names)
+- `layout/` (shared layouts)
+- `prisma/schema.prisma`
 
 ---
 
 ## 📌 If unsure...
 
-Leave a `TODO:` comment or write to `/app/TODO.md`  
-Codex will check it on the next run.
+Leave a `TODO:` comment in code  
+_or_ add a line in `/app/TODO.md` — Codex will check it on the next run.
