@@ -1,5 +1,6 @@
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { Link } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 
 const SERVICES = [
   { id: "svc1", name: "Service A1" },
@@ -26,7 +27,7 @@ export default function Services() {
                   {svc.name}
                 </Text>
                 <div style={{ marginTop: "1rem" }}>
-                  <Link to={`/booking?serviceId=${svc.id}`} prefetch="intent">
+                  <Link to={getAppUrl(`/booking?serviceId=${svc.id}`)} prefetch="intent">
                     <Button primary fullWidth>Book Service</Button>
                   </Link>
                 </div>

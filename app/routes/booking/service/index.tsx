@@ -2,6 +2,7 @@ import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError, useLoaderData } from "@remix-run/react";
 import { useState, useEffect } from "react";
+import { getAppUrl } from "~/utils/url";
 import { prisma } from "~/lib/prisma.server";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
@@ -36,7 +37,7 @@ export default function ChooseServicePage() {
     if (!isStepEnabled(currentStep)) {
       const next = getNextStep(currentStep);
       if (next) {
-        navigate(`/booking/${next}?location=${location}&category=${category}`);
+        navigate(getAppUrl(`/booking/${next}?location=${location}&category=${category}`));
       }
     }
   }, [preselectId]);
@@ -45,7 +46,9 @@ export default function ChooseServicePage() {
     const next = getNextStep(currentStep);
     if (location && category && selectedService && next) {
       navigate(
-        `/booking/${next}?location=${location}&category=${category}&service=${selectedService}`
+        getAppUrl(
+          `/booking/${next}?location=${location}&category=${category}&service=${selectedService}`
+        )
       );
     }
   };
@@ -90,7 +93,7 @@ export default function ChooseServicePage() {
               </div>
             )}
             <div style={{ marginTop: "1rem" }}>
-              <Button url="/booking/service-picker?multi=true" fullWidth>
+              <Button url={getAppUrl("/booking/service-picker?multi=true")} fullWidth>
                 Browse All Services
               </Button>
             </div>

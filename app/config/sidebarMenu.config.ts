@@ -24,26 +24,26 @@ export interface NavigationItem {
 }
 
 export const navigationItems: NavigationItem[] = [
-  { label: "Home", url: "", icon: HomeIcon },
-  { label: "Appointments", url: "/dashboard/calendar", icon: CalendarIcon },
-  { label: "Checkout", url: "/dashboard/checkout", icon: PointOfSaleIcon },
-  { label: "Services", url: "/dashboard/services", icon: ProductIcon },
-  { label: "Memberships & Rewards", url: "/dashboard/memberships", icon: GiftCardIcon },
-  { label: "Payments & Invoices", url: "/dashboard/payments", icon: CashDollarIcon },
-  { label: "Customers", url: "/dashboard/customers", icon: PersonIcon },
-  { label: "Reports", url: "/dashboard/reports", icon: NoteIcon },
-  { label: "Staff", url: "/dashboard/staff", icon: TeamIcon },
-  { label: "Settings", url: "/dashboard/settings", icon: SettingsIcon },
+  { label: "Home", url: getAppUrl("/"), icon: HomeIcon },
+  { label: "Appointments", url: getAppUrl("/dashboard/calendar"), icon: CalendarIcon },
+  { label: "Checkout", url: getAppUrl("/dashboard/checkout"), icon: PointOfSaleIcon },
+  { label: "Services", url: getAppUrl("/dashboard/services"), icon: ProductIcon },
+  { label: "Memberships & Rewards", url: getAppUrl("/dashboard/memberships"), icon: GiftCardIcon },
+  { label: "Payments & Invoices", url: getAppUrl("/dashboard/payments"), icon: CashDollarIcon },
+  { label: "Customers", url: getAppUrl("/dashboard/customers"), icon: PersonIcon },
+  { label: "Reports", url: getAppUrl("/dashboard/reports"), icon: NoteIcon },
+  { label: "Staff", url: getAppUrl("/dashboard/staff"), icon: TeamIcon },
+  { label: "Settings", url: getAppUrl("/dashboard/settings"), icon: SettingsIcon },
 ];
 
 // Keep the existing export name for components expecting `desktopNavigation`
 export const desktopNavigation: NavigationItem[] = navigationItems;
 
 export const mobileNavigation: NavigationItem[] = [
-  { label: "Calendar", url: "/dashboard/calendar", icon: CalendarIcon },
-  { label: "Checkout", url: "/dashboard/checkout", icon: PointOfSaleIcon },
-  { label: "Customers", url: "/dashboard/customers", icon: PersonIcon },
-  { label: "More", url: "/dashboard/settings", icon: MenuHorizontalIcon },
+  { label: "Calendar", url: getAppUrl("/dashboard/calendar"), icon: CalendarIcon },
+  { label: "Checkout", url: getAppUrl("/dashboard/checkout"), icon: PointOfSaleIcon },
+  { label: "Customers", url: getAppUrl("/dashboard/customers"), icon: PersonIcon },
+  { label: "More", url: getAppUrl("/dashboard/settings"), icon: MenuHorizontalIcon },
 ];
 
 export const newAppointmentPath = getAppUrl("/appointments/new");

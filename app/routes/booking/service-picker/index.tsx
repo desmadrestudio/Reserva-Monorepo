@@ -1,5 +1,6 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useNavigate, useNavigation, useRouteError, useSearchParams } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import * as Polaris from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
 import { useBookingCart } from "~/ui/BookingCartProvider"; // 🔄 updated path after ui refactor
@@ -33,7 +34,7 @@ export default function ServicePicker() {
       date: "",
     });
     const multi = searchParams.get("multi");
-    navigate(multi === "true" ? "/booking/cart" : "/booking/review");
+    navigate(multi === "true" ? getAppUrl("/booking/cart") : getAppUrl("/booking/review"));
   }
 
   if (navigation.state === "loading") {

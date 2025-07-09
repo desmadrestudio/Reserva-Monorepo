@@ -66,7 +66,7 @@ export default function NewClass() {
     <Page title="New Class">
       <Form method="post">
         <InlineStack align="end" gap="200">
-          <Button url="/dashboard/calendar">Cancel</Button>
+          <Button url={getAppUrl("/dashboard/calendar")}>Cancel</Button>
           <Button primary submit loading={navigation.state === "submitting"}>Save</Button>
         </InlineStack>
         <Layout>

@@ -1,5 +1,6 @@
 import { Page, Layout, Card } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 import AddOnsCard, { AddOn } from "~/ui/booking/AddOnsCard"; // 🔄 updated path after ui refactor
@@ -30,7 +31,9 @@ export default function AddOnsPage() {
       const next = getNextStep(currentStep);
       if (next) {
         navigate(
-          `/booking/${next}?location=${location}&category=${category}&service=${service}&duration=${duration}`
+          getAppUrl(
+            `/booking/${next}?location=${location}&category=${category}&service=${service}&duration=${duration}`
+          )
         );
       }
     }
@@ -65,7 +68,7 @@ export default function AddOnsPage() {
         .filter(Boolean)
         .join("&");
 
-      navigate(`/booking/${next}?${queryString}`);
+      navigate(getAppUrl(`/booking/${next}?${queryString}`));
     }
   };
 

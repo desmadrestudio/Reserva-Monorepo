@@ -1,4 +1,5 @@
 import { useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import * as Polaris from "@shopify/polaris";
 import { useBookingCart } from "~/ui/BookingCartProvider"; // 🔄 updated path after ui refactor
 
@@ -18,7 +19,7 @@ export default function ReviewCart() {
   }
 
   const handleContinue = () => {
-    navigate("/booking/contact");
+    navigate(getAppUrl("/booking/contact"));
   };
 
   return (

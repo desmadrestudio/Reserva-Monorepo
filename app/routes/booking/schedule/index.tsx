@@ -1,5 +1,6 @@
 import * as Polaris from "@shopify/polaris";
 import { useNavigate, useSearchParams, useNavigation, useRouteError } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
@@ -42,7 +43,7 @@ const {
       if (!isStepEnabled(currentStep)) {
         const next = getNextStep(currentStep);
         if (next) {
-          navigate(`/booking/${next}?${searchParams.toString()}`);
+          navigate(getAppUrl(`/booking/${next}?${searchParams.toString()}`));
         }
       }
     }, []);
@@ -62,7 +63,7 @@ const {
       params.append("date", selectedDate.toISOString());
       params.append("time", selectedTime);
   
-    navigate(`/booking/review?${params.toString()}`);
+    navigate(getAppUrl(`/booking/review?${params.toString()}`));
   };
 
     if (navigation.state === "loading") {
