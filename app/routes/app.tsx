@@ -10,6 +10,7 @@ import {
 import { boundary } from "@shopify/shopify-app-remix/server";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { NavMenu } from "@shopify/app-bridge-react";
+import { getAppUrl } from "~/utils/url";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { authenticate } from "~/shopify.server";
 
@@ -34,10 +35,11 @@ export default function App() {
   return (
     <AppProvider isEmbeddedApp apiKey={apiKey}>
       <NavMenu>
-        <Link to="app" rel="home">
+        <Link to={getAppUrl("/app")}
+          rel="home">
           Home
         </Link>
-        <Link to="app/additional">Additional page</Link>
+        <Link to={getAppUrl("/app/additional")}>Additional page</Link>
       </NavMenu>
       <Outlet />
     </AppProvider>
@@ -51,5 +53,4 @@ export function ErrorBoundary() {
 
 // ✅ Remix Headers Pass-through
 export const headers: HeadersFunction = (headersArgs) => {
-  return boundary.headers(headersArgs);
-};
+  return boundary.headers(headersArgs);};

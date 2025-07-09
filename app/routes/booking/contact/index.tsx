@@ -1,4 +1,5 @@
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
+import { getAppUrl } from "~/utils/url";
 import { Form, useNavigation, useRouteError } from "@remix-run/react";
 import { useState } from "react";
 import * as Polaris from "@shopify/polaris";
@@ -13,7 +14,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const phone = formData.get("phone")?.toString() ?? "";
 
   const params = new URLSearchParams({ firstName, lastName, email, phone });
-  return redirect(`/booking/checkout?${params.toString()}`);
+  return redirect(getAppUrl(`/booking/checkout?${params.toString()}`));
 };
 
 export default function BookingContact() {
