@@ -1,4 +1,5 @@
 import { useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import * as Polaris from "@shopify/polaris";
 import { useCart } from "~/ui/CartProvider"; // 🔄 updated path after ui refactor
 
@@ -17,7 +18,7 @@ export default function ConfirmBooking() {
       quantity: 1,
       variantId: "gid://shopify/ProductVariant/123",
     });
-    navigate("/dashboard/checkout");
+    navigate(getAppUrl("/dashboard/checkout"));
   };
 
   if (navigation.state === "loading") {

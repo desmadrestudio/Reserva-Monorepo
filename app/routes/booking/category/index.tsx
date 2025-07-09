@@ -1,6 +1,7 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError, useLoaderData } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import { useState, useEffect } from "react";
 import { prisma } from "~/lib/prisma.server";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
@@ -30,7 +31,7 @@ export default function ChooseCategoryPage() {
         const params = new URLSearchParams();
         if (location) params.append("location", location);
         if (serviceId) params.append("serviceId", serviceId);
-        navigate(`/booking/${next}?${params.toString()}`);
+        navigate(getAppUrl(`/booking/${next}?${params.toString()}`));
       }
     }
   }, []);
@@ -42,7 +43,7 @@ export default function ChooseCategoryPage() {
       params.append("location", location);
       params.append("category", selectedCategory);
       if (serviceId) params.append("serviceId", serviceId);
-      navigate(`/booking/${next}?${params.toString()}`);
+      navigate(getAppUrl(`/booking/${next}?${params.toString()}`));
     }
   };
 

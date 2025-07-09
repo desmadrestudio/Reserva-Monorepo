@@ -10,6 +10,7 @@ import * as Polaris from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
 import { useBookingCart } from "~/ui/BookingCartProvider"; // 🔄 updated path after ui refactor
 import { getNextStep } from "~/utils/bookingFlow";
+import { getAppUrl } from "~/utils/url";
 import { BOOKING_FLOW } from "~/config/bookingFlow";
 
 const { Page, Layout, Card, Button, Text, Stack, EmptyState } = Polaris;
@@ -47,7 +48,7 @@ export default function PublicBookingIndex() {
     if (next) {
       const params = new URLSearchParams(searchParams);
       params.set("service", service.id);
-      navigate(`/booking/${next}?${params.toString()}`);
+      navigate(getAppUrl(`/booking/${next}?${params.toString()}`));
     }
   }
 

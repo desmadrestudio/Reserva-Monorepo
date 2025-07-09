@@ -35,7 +35,7 @@ export default function CreateMenu({
       prefix: <Polaris.Icon source={BookIcon} />,
       onAction: () => {
         setOpen(false);
-        navigate(`/classes/new?date=${dateParam}`);
+        navigate(`${getAppUrl("/classes/new")}?date=${dateParam}`);
       },
     },
     {
@@ -43,7 +43,7 @@ export default function CreateMenu({
       prefix: <Polaris.Icon source={NoteAddIcon} />,
       onAction: () => {
         setOpen(false);
-        navigate(`/events/new?date=${dateParam}`);
+        navigate(`${getAppUrl("/events/new")}?date=${dateParam}`);
       },
     },
   ];
