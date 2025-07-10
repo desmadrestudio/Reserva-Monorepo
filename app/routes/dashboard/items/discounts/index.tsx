@@ -14,13 +14,14 @@ import CrudFormCard from "~/ui/CrudFormCard";
 import { authenticate } from "~/shopify.server";
 import { requireUserId } from "~/utils/auth.server";
 import { prisma } from "~/lib/prisma.server";
+import { getRequestUrl } from "~/utils/url";
 
 const { Page, Layout, Card } = Polaris;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  const url = new URL(request.url);
+  const url = getRequestUrl(request);
   const id = url.searchParams.get("id") || undefined;
   const [discounts, discount] = await Promise.all([
     prisma.discount.findMany({ select: { id: true, name: true } }),

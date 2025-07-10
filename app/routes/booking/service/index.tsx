@@ -2,12 +2,12 @@ import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError, useLoaderData } from "@remix-run/react";
 import { useState, useEffect } from "react";
-import { getAppUrl } from "~/utils/url";
+import { getAppUrl, getRequestUrl } from "~/utils/url";
 import { prisma } from "~/lib/prisma.server";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
+  const url = getRequestUrl(request);
   const category = url.searchParams.get("category") || undefined;
   const services = await prisma.service.findMany({
     where: category ? { category } : undefined,
