@@ -1,12 +1,16 @@
-import * as Polaris from "@shopify/polaris";
+import {
+  Page,
+  Layout,
+  Card,
+  Button,
+  Text,
+} from "@shopify/polaris";
 import { json, type LoaderFunction, type LinksFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import calendarStyles from "react-calendar/dist/Calendar.css?url";
-
-const { Page, Layout, Card, Button, Text } = Polaris;
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: calendarStyles },
@@ -41,13 +45,15 @@ export default function Home() {
                 flexWrap: "wrap",
               }}
             >
-              <Button url="dashboard" primary>
-                Go to Dashboard
-              </Button>
-              <Button url="/apps/reserva-app/appointments/new">Book New Appointment</Button>
-              <Button url="dashboard/appointments" plain>
-                View All Appointments
-              </Button>
+              <Link to="/dashboard">
+                <Button primary>Go to Dashboard</Button>
+              </Link>
+              <Link to="/appointments/new">
+                <Button>Book New Appointment</Button>
+              </Link>
+              <Link to="/appointments">
+                <Button plain>View All Appointments</Button>
+              </Link>
             </div>
           </Card>
         </Layout.Section>
