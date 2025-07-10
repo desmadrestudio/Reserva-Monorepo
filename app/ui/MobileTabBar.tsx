@@ -22,6 +22,7 @@ export default function MobileTabBar() {
 
   return (
     <nav className="mobile-tab-bar">
+      <div>MobileTabBar mounted</div>
       {tabs.map((tab) => {
         const isActive = location.pathname.startsWith(tab.path);
         return (
