@@ -1,6 +1,7 @@
 import * as Polaris from "@shopify/polaris";
 import { json, type LoaderFunction, type LinksFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { useState } from "react";
 import Calendar from "react-calendar";
@@ -41,11 +42,11 @@ export default function Home() {
                 flexWrap: "wrap",
               }}
             >
-              <Button url="dashboard" primary>
+              <Button url={getAppUrl("/dashboard")} primary>
                 Go to Dashboard
               </Button>
-              <Button url="/apps/reserva-app/appointments/new">Book New Appointment</Button>
-              <Button url="dashboard/appointments" plain>
+              <Button url={getAppUrl("/appointments/new")}>Book New Appointment</Button>
+              <Button url={getAppUrl("/dashboard/appointments")} plain>
                 View All Appointments
               </Button>
             </div>

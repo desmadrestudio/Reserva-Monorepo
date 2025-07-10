@@ -1,6 +1,7 @@
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { useState, useEffect } from "react";
 import { useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
 const LOCATIONS = [
@@ -20,7 +21,7 @@ export default function ChooseLocationPage() {
     if (!isStepEnabled(currentStep)) {
       const next = getNextStep(currentStep);
       if (next) {
-        navigate(`/booking/${next}`);
+        navigate(getAppUrl(`/booking/${next}`));
       }
     }
   }, []);
@@ -28,7 +29,7 @@ export default function ChooseLocationPage() {
   const handleContinue = () => {
     const next = getNextStep(currentStep);
     if (selectedLocation && next) {
-      navigate(`/booking/${next}?location=${selectedLocation}`);
+      navigate(getAppUrl(`/booking/${next}?location=${selectedLocation}`));
     }
   };
 

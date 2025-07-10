@@ -7,6 +7,7 @@ import {
   ChoiceList,
 } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError } from "@remix-run/react";
+import { getAppUrl } from "~/utils/url";
 import { useState, useEffect } from "react";
 import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
 
@@ -49,7 +50,7 @@ export default function ChooseStaffPage() {
         if (service) params.append("service", service);
         if (duration) params.append("duration", duration);
         addons.forEach((a) => params.append("addons", a));
-        navigate(`/booking/${next}?${params.toString()}`);
+        navigate(getAppUrl(`/booking/${next}?${params.toString()}`));
       }
     }
   }, []);
@@ -69,7 +70,7 @@ export default function ChooseStaffPage() {
       params.append("gender", genderPref);
     }
 
-    navigate(`/booking/${next}?${params.toString()}`);
+    navigate(getAppUrl(`/booking/${next}?${params.toString()}`));
   };
 
   if (navigation.state === "loading") {

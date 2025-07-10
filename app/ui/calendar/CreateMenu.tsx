@@ -8,6 +8,7 @@ import {
   NoteAddIcon,
 } from "@shopify/polaris-icons";
 import { useIsMobile } from "../../utils/useIsMobile";
+import { getAppUrl } from "../../utils/url";
 
 export default function CreateMenu({
   selectedDate,
@@ -26,7 +27,7 @@ export default function CreateMenu({
       prefix: <Polaris.Icon source={CalendarTimeIcon} />,
       onAction: () => {
         setOpen(false);
-        navigate(`/apps/reserva-app/appointments/new?date=${dateParam}`);
+        navigate(`${getAppUrl("/appointments/new")}?date=${dateParam}`);
       },
     },
     {
@@ -34,7 +35,7 @@ export default function CreateMenu({
       prefix: <Polaris.Icon source={BookIcon} />,
       onAction: () => {
         setOpen(false);
-        navigate(`/classes/new?date=${dateParam}`);
+        navigate(`${getAppUrl("/classes/new")}?date=${dateParam}`);
       },
     },
     {
@@ -42,7 +43,7 @@ export default function CreateMenu({
       prefix: <Polaris.Icon source={NoteAddIcon} />,
       onAction: () => {
         setOpen(false);
-        navigate(`/events/new?date=${dateParam}`);
+        navigate(`${getAppUrl("/events/new")}?date=${dateParam}`);
       },
     },
   ];

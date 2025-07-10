@@ -7,6 +7,7 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { EntryContext } from "@remix-run/node";
 import { isbot } from "isbot";
 import { addDocumentResponseHeaders } from "./shopify.server";
+import { BASENAME } from "./utils/url";
 
 export const streamTimeout = 5000;
 
@@ -22,8 +23,15 @@ export default async function handleRequest(
   const callbackName = isbot(userAgent ?? "") ? "onAllReady" : "onShellReady";
 
   return new Promise((resolve, reject) => {
+    const base = process.env.SHOPIFY_APP_URL || "http://localhost";
+    const fullUrl = request.url.startsWith("http")
+      ? request.url
+      : `${base}${request.url}`;
+    const url = new URL(fullUrl);
+    url.pathname = url.pathname.replace(BASENAME, "");
+    const remixUrl = url.toString();
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer context={remixContext} url={request.url} />,
+      <RemixServer basename={BASENAME} context={remixContext} url={remixUrl} />,
       {
         [callbackName]: () => {
           const body = new PassThrough();

@@ -7,7 +7,8 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import * as Polaris from "@shopify/polaris";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
+import { getAppUrl } from "./utils/url";
 import "@shopify/polaris/build/esm/styles.css";
 
 import styles from "./styles/global.css";
@@ -39,6 +40,7 @@ const CustomLink = ({ url, external, ...rest }: Polaris.LinkLikeComponentProps) 
 };
 
 export default function App() {
+  const location = useLocation();
   return (
     <html lang="en">
       <head>
@@ -59,7 +61,7 @@ export default function App() {
             <Polaris.AppProvider i18n={i18n} linkComponent={CustomLink}>
               <Polaris.Frame
                 navigation={
-                  <Polaris.Navigation location="/">
+                  <Polaris.Navigation location={getAppUrl(location.pathname)}>
                     <Polaris.Navigation.Section
                       items={desktopNavigation}
                     />

@@ -4,6 +4,7 @@ import { Form, useLoaderData, useNavigation, useRouteError } from "@remix-run/re
 import * as Polaris from "@shopify/polaris";
 import { useState } from "react";
 import { getProviders } from "~/utils/provider.server";
+import { getAppUrl } from "~/utils/url";
 
 const {
   Page,
@@ -46,7 +47,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ error: "Invalid date" }, { status: 400 });
   }
 
-  return redirect("/dashboard/calendar");
+  return redirect(getAppUrl("/dashboard/calendar"));
 };
 
 export default function NewEvent() {
@@ -65,7 +66,7 @@ export default function NewEvent() {
     <Page title="New Personal Event">
       <Form method="post">
         <InlineStack align="end" gap="200">
-          <Button url="dashboard/calendar">Cancel</Button>
+          <Button url={getAppUrl("/dashboard/calendar")}>Cancel</Button>
           <Button primary submit loading={navigation.state === "submitting"}>Save</Button>
         </InlineStack>
         <Layout>
