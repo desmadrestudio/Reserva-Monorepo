@@ -132,3 +132,13 @@ export default function CalendarPage() {
     </Page>
   );
 }
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return (
+    <Page title="Error">
+      <Layout>
+        <LegacyCard sectioned>{error.message}</LegacyCard>
+      </Layout>
+    </Page>
+  );
+}
