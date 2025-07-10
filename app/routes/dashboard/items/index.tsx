@@ -27,16 +27,16 @@ export default function ItemsAndServicesIndex() {
     <Page title="Items & Services">
       <Layout>
         <Layout.Section>
-          <Navigation location="dashboard/items">
+          <Navigation location="/dashboard/items">
             <Navigation.Section
               items={[
-                { url: "dashboard/items/all-items", label: "All Items" },
-                { url: "dashboard/items/resources", label: "Resources" },
-                { url: "dashboard/items/categories", label: "Categories" },
-                { url: "dashboard/items/modifiers", label: "Modifiers" },
-                { url: "dashboard/items/discounts", label: "Discounts" },
-                { url: "dashboard/items/options", label: "Options" },
-                { url: "dashboard/items/units", label: "Units" },
+                { url: "/dashboard/items/all-items", label: "All Items" },
+                { url: "/dashboard/items/resources", label: "Resources" },
+                { url: "/dashboard/items/categories", label: "Categories" },
+                { url: "/dashboard/items/modifiers", label: "Modifiers" },
+                { url: "/dashboard/items/discounts", label: "Discounts" },
+                { url: "/dashboard/items/options", label: "Options" },
+                { url: "/dashboard/items/units", label: "Units" },
               ]}
             />
           </Navigation>

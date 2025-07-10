@@ -38,46 +38,46 @@ export default function SettingsPage() {
             <Card.Section>
               <List>
                 <List.Item>
-                  <Polaris.Link url="dashboard/services">
+                  <Polaris.Link url="/dashboard/services">
                     Services
                   </Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/memberships">
+                  <Polaris.Link url="/dashboard/memberships">
                     Memberships & Rewards
                   </Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/online-booking">
+                  <Polaris.Link url="/dashboard/online-booking">
                     Online Booking
                   </Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/marketplace">Marketplace</Polaris.Link>
+                  <Polaris.Link url="/dashboard/marketplace">Marketplace</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/waitlist">Waitlist</Polaris.Link>
+                  <Polaris.Link url="/dashboard/waitlist">Waitlist</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/notifications">Notifications</Polaris.Link>
+                  <Polaris.Link url="/dashboard/notifications">Notifications</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/invoices">Invoices</Polaris.Link>
+                  <Polaris.Link url="/dashboard/invoices">Invoices</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/transactions">Transactions</Polaris.Link>
+                  <Polaris.Link url="/dashboard/transactions">Transactions</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/orders">Orders</Polaris.Link>
+                  <Polaris.Link url="/dashboard/orders">Orders</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/reports">Reports</Polaris.Link>
+                  <Polaris.Link url="/dashboard/reports">Reports</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/banking">Banking</Polaris.Link>
+                  <Polaris.Link url="/dashboard/banking">Banking</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="dashboard/addons">Add-ons</Polaris.Link>
+                  <Polaris.Link url="/dashboard/addons">Add-ons</Polaris.Link>
                 </List.Item>
               </List>
             </Card.Section>
