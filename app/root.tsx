@@ -12,6 +12,7 @@ import "@shopify/polaris/build/esm/styles.css";
 
 import styles from "./styles/global.css";
 import MobileTabBar from "./ui/MobileTabBar"; // 🔄 updated path after ui refactor
+import { useIsMobile } from "./utils/useIsMobile";
 import { desktopNavigation } from "./config/sidebarMenu.config";
 import { CartProvider } from "./ui/CartProvider"; // 🔄 updated path after ui refactor
 import { BookingCartProvider } from "./ui/BookingCartProvider"; // 🔄 updated path after ui refactor
@@ -39,6 +40,7 @@ const CustomLink = ({ url, external, ...rest }: Polaris.LinkLikeComponentProps) 
 };
 
 export default function App() {
+  const isMobile = useIsMobile();
   return (
     <html lang="en">
       <head>
@@ -67,7 +69,7 @@ export default function App() {
                 }
               >
                 <Outlet />
-                <MobileTabBar />
+                {isMobile && <MobileTabBar />}
               </Polaris.Frame>
             </Polaris.AppProvider>
           </CartProvider>
