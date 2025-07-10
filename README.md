@@ -24,19 +24,21 @@ Reserva is a full-stack Shopify booking app using **Remix**, **Shopify Polaris**
 /
 ├── apps/
 │   └── reserva-ui/
-│       ├── app/                  # Remix app logic
-│       │   ├── lib/              # prisma.server.ts, shopify.server.ts
-│       │   ├── ui/               # All UI components (was 'components')
-│       │   │   ├── dashboard.ui/
+│       ├── app/
+│       │   ├── lib/
+│       │   ├── ui/
+│       │   │   ├── dashboard/
+│       │   │   ├── booking/
 │       │   │   └── shared/
-│       │   ├── routes/           # File-based routes
-│       │   └── styles/           # Global CSS
-│       ├── prisma/               # Prisma schema & migrations
-│       └── public/               # Static assets
-├── extensions/                   # Future Shopify app extensions
-├── packages/                     # Shared libraries (optional)
-├── AGENTS.md                     # AI agent conventions
-├── .env                          # Environment variables
+│       │   ├── components/
+│       │   ├── routes/
+│       │   └── styles/
+│       ├── prisma/
+│       └── public/
+├── extensions/
+├── packages/
+├── AGENTS.md
+├── .env
 └── README.md
 ```
 
@@ -46,17 +48,9 @@ Reserva is a full-stack Shopify booking app using **Remix**, **Shopify Polaris**
 
 ```bash
 cd apps/reserva-ui
-
-# Install dependencies
 npm install
-
-# Generate Prisma client
 npx prisma generate
-
-# Run DB migration
 npx prisma migrate dev --name init
-
-# Start dev server
 npm run dev
 ```
 
@@ -70,22 +64,48 @@ Then visit: `http://localhost:3000`
 SHOPIFY_API_KEY=your-key
 SHOPIFY_API_SECRET=your-secret
 SHOPIFY_APP_URL=http://localhost:3000
-SESSION_SECRET=some-random-string
+SESSION_SECRET=some-32-char-unpredictable-string
 DATABASE_URL="file:./dev.sqlite"
 ```
 
 ---
 
-## 🧠 AI Automation Rules (Codex/Copilot)
+## 📁 Route & Layout Best Practices
 
-- ✅ Use **Polaris only** for UI (no Tailwind)
-- 📁 All UI goes into `/app/ui/`
-- 📚 Access DB via `lib/prisma.server.ts`
-- 🔬 Schema is in `/prisma/schema.prisma`
-- 🔒 SSR-safe: Guard browser logic with `typeof window !== "undefined"`
-- ⚠️ Avoid SSR-only packages
-- 🧩 Follow Remix's loader/action + file-based routing
-- 📎 If unsure, leave a TODO or write to `app/TODO.md`
+- ✅ Use nested folders for domain-specific flows (e.g., `/dashboard/`, `/booking/`)
+- ✅ Every folder must include `index.tsx` to expose the path
+- ✅ Shared layouts live in `/app/components/layout/` and are injected via `root.tsx`
+- ❌ Avoid mixing flat `.tsx` routes at the root — place them under meaningful folders
+- ❗ Dynamic segments use `$param.tsx` and require proper parent route file
+
+---
+
+## 🔒 Environment Security Checklist
+
+- `SESSION_SECRET` must be **32+ characters**, unpredictable, and not committed
+- Validate `.env` values using:
+
+```ts
+if (!process.env.SESSION_SECRET) throw new Error("Missing SESSION_SECRET");
+```
+
+- Avoid `window`/`document` inside `loader()` or `action()` — use `typeof window !== "undefined"`
+
+---
+
+## 🧩 Polaris & App Bridge Tips
+
+- Wrap UI in:
+
+```tsx
+<AppProvider>
+  <LayoutComponent>
+    <Outlet />
+  </LayoutComponent>
+</AppProvider>
+```
+
+- Use `@shopify/app-bridge-react` to ensure embedded navigation works consistently
 
 ---
 
@@ -150,6 +170,19 @@ export default function Dashboard() {
 - [ ] Create appointment via modal
 - [ ] Filter/search by customer
 - [ ] Confirm flow for staff assignment
+
+---
+
+## 🧠 AI Automation Rules (Codex/Copilot)
+
+- ✅ Use **Polaris only** for UI (no Tailwind)
+- 📁 All UI goes into `/app/ui/`
+- 📚 Access DB via `lib/prisma.server.ts`
+- 🔬 Schema is in `/prisma/schema.prisma`
+- 🔒 SSR-safe: Guard browser logic with `typeof window !== "undefined"`
+- ⚠️ Avoid SSR-only packages
+- 🧩 Follow Remix's loader/action + file-based routing
+- 📎 If unsure, leave a TODO or write to `app/TODO.md`
 
 ---
 
