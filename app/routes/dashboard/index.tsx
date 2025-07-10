@@ -1,4 +1,4 @@
-import { useNavigation, useRouteError } from "@remix-run/react";
+import { Outlet, useNavigation, useRouteError } from "@remix-run/react";
 import { Page, Layout, Card } from "@shopify/polaris";
 
 export default function DashboardIndex() {
@@ -7,7 +7,9 @@ export default function DashboardIndex() {
   if (navigation.state === "loading") {
     return (
       <Page>
-        <Card sectioned>Loading...</Card>
+        <Layout>
+          <Card sectioned>Loading...</Card>
+        </Layout>
       </Page>
     );
   }
@@ -16,6 +18,7 @@ export default function DashboardIndex() {
     <Page title="Dashboard Home">
       <Layout>
         <Card sectioned>Welcome to Dashboard</Card>
+        <Outlet />
       </Layout>
     </Page>
   );
@@ -25,7 +28,9 @@ export function ErrorBoundary() {
   const error = useRouteError();
   return (
     <Page title="Error">
-      <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+      <Layout>
+        <Card sectioned>{error ? String(error) : "Unknown error"}</Card>
+      </Layout>
     </Page>
   );
 }
@@ -33,7 +38,9 @@ export function ErrorBoundary() {
 export function CatchBoundary() {
   return (
     <Page title="Error">
-      <Card sectioned>Something went wrong.</Card>
+      <Layout>
+        <Card sectioned>Something went wrong.</Card>
+      </Layout>
     </Page>
   );
 }
