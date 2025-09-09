@@ -48,10 +48,10 @@ Reserva is a full-stack Shopify booking app using **Remix**, **Shopify Polaris**
 
 ```bash
 cd apps/reserva-ui
-npm install
-npx prisma generate
-npx prisma migrate dev --name init
-npm run dev
+pnpm install
+pnpm dlx prisma generate
+pnpm dlx prisma migrate dev --name init
+pnpm dev
 ```
 
 Then visit: `http://localhost:3000`
@@ -132,7 +132,7 @@ url = "/appointments/new"
 Push updates with:
 
 ```bash
-npx shopify app config push
+pnpm dlx @shopify/cli@latest app config push
 ```
 
 ---
@@ -189,11 +189,25 @@ export default function Dashboard() {
 ## 🧪 Local Dev Commands
 
 ```bash
-npm run dev                 # Start dev server
-npm run test                # Run unit tests
-npx prisma generate         # Generate Prisma client
-npx prisma migrate dev      # Run migrations
-npx prisma studio           # DB browser
+pnpm dev                    # Start dev server
+pnpm test                   # Run unit tests
+pnpm dlx prisma generate    # Generate Prisma client
+pnpm dlx prisma migrate dev # Run migrations
+pnpm dlx prisma studio      # DB browser
+```
+
+---
+
+## 🆕 Shopify CLI (Next-Gen)
+
+Shopify apps now require the Next-Gen CLI for deploying and running dev environments.
+
+```bash
+# one-time setup for mapping extensions
+pnpm dlx @shopify/cli@latest app deploy
+
+# start your local dev environment
+pnpm dlx @shopify/cli@latest app dev
 ```
 
 ---

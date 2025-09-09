@@ -26,6 +26,10 @@ You are working inside a Shopify App using Remix, Polaris, and Prisma.
 - Use `layout.tsx` only in route folders that require nested layout behavior.  
   Prefer shared layouts in `/app/components/layout/` and inject via `root.tsx`.
 - All route folders **must** contain an `index.tsx` for default path exposure
+- Use `pnpm` for all commands instead of `npm`/`npx` to stay consistent with workspace setup.
+- Run Shopify CLI commands via `pnpm dlx @shopify/cli@latest app dev` or `app deploy` (Next-Gen) instead of older `shopify app dev`.
+- Document monorepo awareness: main app is in `apps/reserva-ui/`; supporting packages and extensions live under `packages/` and `extensions/`.
+- Always export `ErrorBoundary` and `CatchBoundary` in route files to handle Remix errors gracefully.
 
 ---
 
