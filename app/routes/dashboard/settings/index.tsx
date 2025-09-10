@@ -48,7 +48,7 @@ export default function SettingsPage() {
                   </Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/memberships">
+                  <Polaris.Link url="/memberships">
                     Memberships & Rewards
                   </Polaris.Link>
                 </List.Item>
@@ -58,31 +58,31 @@ export default function SettingsPage() {
                   </Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/marketplace">Marketplace</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Marketplace (coming soon)</Polaris.Text>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/waitlist">Waitlist</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Waitlist (coming soon)</Polaris.Text>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/notifications">Notifications</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Notifications (coming soon)</Polaris.Text>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/invoices">Invoices</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Invoices (coming soon)</Polaris.Text>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/transactions">Transactions</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Transactions (coming soon)</Polaris.Text>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/orders">Orders</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Orders (coming soon)</Polaris.Text>
                 </List.Item>
                 <List.Item>
                   <Polaris.Link url="/reports">Reports</Polaris.Link>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/banking">Banking</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Banking (coming soon)</Polaris.Text>
                 </List.Item>
                 <List.Item>
-                  <Polaris.Link url="/dashboard/addons">Add-ons</Polaris.Link>
+                  <Polaris.Text as="span" tone="subdued">Add-ons (coming soon)</Polaris.Text>
                 </List.Item>
               </List>
             </Card.Section>
