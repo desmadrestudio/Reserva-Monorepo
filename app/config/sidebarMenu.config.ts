@@ -1,5 +1,6 @@
-// This file defines the left-hand sidebar menu items for desktop/dashboard views.
-// It does NOT power the mobile nav (see MobileTabBar.tsx).
+// app/config/sidebarMenu.config.ts
+// Defines sidebar navigation items for the desktop dashboard.
+// Note: This does NOT power the mobile nav (see app/ui/MobileTabBar.tsx).
 
 import type { IconProps } from "@shopify/polaris";
 import {
@@ -24,24 +25,24 @@ export interface NavigationItem {
 
 export const navigationItems: NavigationItem[] = [
   { label: "Home", url: "/", icon: HomeIcon },
-  { label: "Appointments", url: "/dashboard/calendar", icon: CalendarIcon },
-  { label: "Checkout", url: "/dashboard/checkout", icon: PointOfSaleIcon },
-  { label: "Services", url: "/dashboard/services", icon: ProductIcon },
-  { label: "Memberships & Rewards", url: "/dashboard/memberships", icon: GiftCardIcon },
-  { label: "Payments & Invoices", url: "/dashboard/payments", icon: CashDollarIcon },
-  { label: "Customers", url: "/dashboard/customers", icon: PersonIcon },
-  { label: "Reports", url: "/dashboard/reports", icon: NoteIcon },
-  { label: "Staff", url: "/dashboard/staff", icon: TeamIcon },
-  { label: "Settings", url: "/dashboard/settings", icon: SettingsIcon },
+  { label: "Appointments", url: "/appointments", icon: CalendarIcon },
+  { label: "Checkout", url: "/checkout", icon: PointOfSaleIcon },
+  { label: "Services", url: "/services", icon: ProductIcon },
+  { label: "Memberships & Rewards", url: "/memberships", icon: GiftCardIcon },
+  { label: "Payments & Invoices", url: "/payments", icon: CashDollarIcon },
+  { label: "Customers", url: "/customers", icon: PersonIcon },
+  { label: "Reports", url: "/reports", icon: NoteIcon },
+  { label: "Staff", url: "/staff", icon: TeamIcon },
+  { label: "Settings", url: "/settings", icon: SettingsIcon },
 ];
 
 export const desktopNavigation: NavigationItem[] = navigationItems;
 
 export const mobileNavigation: NavigationItem[] = [
-  { label: "Calendar", url: "/dashboard/calendar", icon: CalendarIcon },
-  { label: "Checkout", url: "/dashboard/checkout", icon: PointOfSaleIcon },
-  { label: "Customers", url: "/dashboard/customers", icon: PersonIcon },
-  { label: "More", url: "/dashboard/settings", icon: MenuHorizontalIcon },
+  { label: "Appointments", url: "/appointments", icon: CalendarIcon },
+  { label: "Checkout", url: "/checkout", icon: PointOfSaleIcon },
+  { label: "Customers", url: "/customers", icon: PersonIcon },
+  { label: "More", url: "/settings", icon: MenuHorizontalIcon },
 ];
 
 export const newAppointmentPath = "/appointments/new";

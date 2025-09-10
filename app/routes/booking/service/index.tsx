@@ -2,10 +2,18 @@ import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError, useLoaderData } from "@remix-run/react";
 import { useState, useEffect } from "react";
-import { prisma } from "~/lib/prisma.server";
-import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
+import { BOOKING_FLOW } from "~/config/bookingFlow";
+
+// Client-safe helpers (avoid importing prisma from a client bundle)
+const getNextStep = (currentStep: string): string | null => {
+  const index = BOOKING_FLOW.indexOf(currentStep);
+  if (index === -1 || index === BOOKING_FLOW.length - 1) return null;
+  return BOOKING_FLOW[index + 1];
+};
+const isStepEnabled = (step: string): boolean => BOOKING_FLOW.includes(step);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const { prisma } = await import("~/lib/prisma.server");
   const url = new URL(request.url);
   const category = url.searchParams.get("category") || undefined;
   const services = await prisma.service.findMany({
@@ -90,7 +98,7 @@ export default function ChooseServicePage() {
               </div>
             )}
             <div style={{ marginTop: "1rem" }}>
-              <Button url="booking/service-picker?multi=true" fullWidth>
+              <Button url="/booking/service-picker?multi=true" fullWidth>
                 Browse All Services
               </Button>
             </div>

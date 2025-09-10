@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ error: "Invalid date" }, { status: 400 });
   }
 
-  return redirect("/dashboard/calendar");
+  return redirect("/events");
 };
 
 export default function NewEvent() {
@@ -65,7 +65,7 @@ export default function NewEvent() {
     <Page title="New Personal Event">
       <Form method="post">
         <InlineStack align="end" gap="200">
-          <Button url="dashboard/calendar">Cancel</Button>
+          <Button url="/events">Cancel</Button>
           <Button primary submit loading={navigation.state === "submitting"}>Save</Button>
         </InlineStack>
         <Layout>

@@ -140,11 +140,12 @@ export default function Index() {
                     url="https://shopify.dev/docs/apps/tools/app-bridge"
                     target="_blank"
                     removeUnderline
+                    external
                   >
                     App Bridge
                   </Link>{" "}
                   examples like an{" "}
-                  <Link url="app/additional" removeUnderline>
+                  <Link url="/app/additional" removeUnderline>
                     additional page
                   </Link>{" "}
                   and an{" "}
@@ -152,6 +153,7 @@ export default function Index() {
                     url="https://shopify.dev/docs/api/admin-graphql"
                     target="_blank"
                     removeUnderline
+                    external
                   >
                     Admin GraphQL
                   </Link>{" "}
@@ -172,6 +174,7 @@ export default function Index() {
                       url={`shopify:admin/products/${productId}`}
                       target="_blank"
                       variant="plain"
+                      external
                     >
                       View product
                     </Button>
@@ -219,13 +222,13 @@ export default function Index() {
                 <Text variant="headingMd">App template specs</Text>
                 <InlineStack align="space-between">
                   <Text>Framework</Text>
-                  <Link url="https://remix.run" target="_blank" removeUnderline>
+                  <Link url="https://remix.run" target="_blank" removeUnderline external>
                     Remix
                   </Link>
                 </InlineStack>
                 <InlineStack align="space-between">
                   <Text>Database</Text>
-                  <Link url="https://www.prisma.io/" target="_blank" removeUnderline>
+                  <Link url="https://www.prisma.io/" target="_blank" removeUnderline external>
                     Prisma
                   </Link>
                 </InlineStack>
@@ -236,6 +239,7 @@ export default function Index() {
                       url="https://polaris.shopify.com"
                       target="_blank"
                       removeUnderline
+                      external
                     >
                       Polaris
                     </Link>
@@ -244,6 +248,7 @@ export default function Index() {
                       url="https://shopify.dev/docs/apps/tools/app-bridge"
                       target="_blank"
                       removeUnderline
+                      external
                     >
                       App Bridge
                     </Link>
@@ -255,6 +260,7 @@ export default function Index() {
                     url="https://shopify.dev/docs/api/admin-graphql"
                     target="_blank"
                     removeUnderline
+                    external
                   >
                     GraphQL API
                   </Link>
@@ -270,6 +276,7 @@ export default function Index() {
                       url="https://shopify.dev/docs/apps/getting-started/build-app-example"
                       target="_blank"
                       removeUnderline
+                      external
                     >
                       example app
                     </Link>
@@ -280,6 +287,7 @@ export default function Index() {
                       url="https://shopify.dev/docs/apps/tools/graphiql-admin-api"
                       target="_blank"
                       removeUnderline
+                      external
                     >
                       GraphiQL
                     </Link>

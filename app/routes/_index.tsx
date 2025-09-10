@@ -41,11 +41,11 @@ export default function Home() {
                 flexWrap: "wrap",
               }}
             >
-              <Button url="dashboard" primary>
+              <Button url="/dashboard" primary>
                 Go to Dashboard
               </Button>
-              <Button url="/apps/reserva-app/appointments/new">Book New Appointment</Button>
-              <Button url="dashboard/appointments" plain>
+              <Button url="/booking">Book New Appointment</Button>
+              <Button url="/appointments" plain>
                 View All Appointments
               </Button>
             </div>

@@ -2,10 +2,19 @@ import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Page, Layout, Card, Button, Text } from "@shopify/polaris";
 import { useSearchParams, useNavigate, useNavigation, useRouteError, useLoaderData } from "@remix-run/react";
 import { useState, useEffect } from "react";
-import { prisma } from "~/lib/prisma.server";
-import { getNextStep, isStepEnabled } from "~/utils/bookingFlow";
+import { BOOKING_FLOW } from "~/config/bookingFlow";
+
+// Client-safe helpers (no server imports)
+const getNextStep = (currentStep: string): string | null => {
+  const index = BOOKING_FLOW.indexOf(currentStep);
+  if (index === -1 || index === BOOKING_FLOW.length - 1) return null;
+  return BOOKING_FLOW[index + 1];
+};
+
+const isStepEnabled = (step: string): boolean => BOOKING_FLOW.includes(step);
 
 export const loader = async (_args: LoaderFunctionArgs) => {
+  const { prisma } = await import("~/lib/prisma.server");
   const categories = await prisma.category.findMany({
     select: { id: true, name: true },
   });

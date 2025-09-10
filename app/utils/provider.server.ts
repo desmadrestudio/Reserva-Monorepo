@@ -1,5 +1,5 @@
 // utils/provider.server.ts
-import { prisma } from "../lib/prisma.server";
+import { prisma } from "~/lib/prisma.server";
 
 export async function getProviders() {
     const dbProviders = await prisma.provider.findMany();

@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma.server";
+import { prisma } from "~/lib/prisma.server";
 
 export async function getAppointments({ start, end, shop }: { start: Date; end: Date; shop?: string }, db = prisma) {
   return db.appointment.findMany({

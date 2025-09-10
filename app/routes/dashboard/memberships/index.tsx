@@ -10,13 +10,17 @@ const { Page, Layout, Card } = Polaris;
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  return json({});
+  return json(null);
 };
+
+import type { V2_MetaFunction } from "@remix-run/node";
+export const meta: V2_MetaFunction = () => [{ title: "Memberships & Rewards • Dashboard" }];
 
 export default function MembershipsPage() {
   const navigation = useNavigation();
+  const isLoading = navigation.state !== "idle";
 
-  if (navigation.state === "loading") {
+  if (isLoading) {
     return (
       <Page>
         <Card sectioned>Loading...</Card>

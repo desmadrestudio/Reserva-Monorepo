@@ -56,7 +56,7 @@ export const action: ActionFunction = async ({ request }) => {
     notes: notes ? String(notes) : undefined,
   });
 
-  return redirect("/dashboard/calendar");
+  return redirect("/appointments");
 };
 
 export default function NewAppointment() {
@@ -75,7 +75,7 @@ export default function NewAppointment() {
     <Page title="New Appointment">
       <Form method="post">
         <InlineStack align="end" gap="200">
-          <Button url="dashboard/calendar">Cancel</Button>
+          <Button url="/appointments">Cancel</Button>
           <Button primary submit loading={navigation.state === "submitting"}>Save</Button>
         </InlineStack>
         <Layout>
