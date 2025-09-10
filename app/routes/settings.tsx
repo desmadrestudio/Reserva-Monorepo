@@ -1,7 +1,15 @@
-import { redirect, type LoaderFunction } from "@remix-run/node";
+import { Page, Layout, Card, Text } from "@shopify/polaris";
 
-export const loader: LoaderFunction = async () => redirect("/dashboard/settings");
-
-export default function SettingsRedirect() {
-  return null;
+export default function SettingsPage() {
+  return (
+    <Page title="Settings">
+      <Layout>
+        <Layout.Section>
+          <Card sectioned>
+            <Text as="p">This is the Settings page.</Text>
+          </Card>
+        </Layout.Section>
+      </Layout>
+    </Page>
+  );
 }

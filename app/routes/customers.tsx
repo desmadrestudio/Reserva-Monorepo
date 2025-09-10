@@ -1,7 +1,15 @@
-import { redirect, type LoaderFunction } from "@remix-run/node";
+import * as Polaris from "@shopify/polaris";
 
-export const loader: LoaderFunction = async () => redirect("/dashboard/customers");
-
-export default function CustomersRedirect() {
-  return null;
+export default function CustomersPage() {
+  return (
+    <Polaris.Page title="Customers">
+      <Polaris.Layout>
+        <Polaris.Layout.Section>
+          <Polaris.Card sectioned>
+            <p>This is the Customers page.</p>
+          </Polaris.Card>
+        </Polaris.Layout.Section>
+      </Polaris.Layout>
+    </Polaris.Page>
+  );
 }

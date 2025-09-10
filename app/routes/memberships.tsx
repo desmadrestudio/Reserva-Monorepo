@@ -1,7 +1,15 @@
-import { redirect, type LoaderFunction } from "@remix-run/node";
+import { Page, Layout, Card, Text } from "@shopify/polaris";
 
-export const loader: LoaderFunction = async () => redirect("/dashboard/memberships");
-
-export default function MembershipsRedirect() {
-  return null;
+export default function MembershipsPage() {
+  return (
+    <Page title="Memberships &amp; Rewards">
+      <Layout>
+        <Layout.Section>
+          <Card sectioned>
+            <Text as="p">This is the Memberships &amp; Rewards page.</Text>
+          </Card>
+        </Layout.Section>
+      </Layout>
+    </Page>
+  );
 }

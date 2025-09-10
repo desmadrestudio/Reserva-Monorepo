@@ -1,7 +1,15 @@
-import { redirect, type LoaderFunction } from "@remix-run/node";
+import { Page, Layout, Card, Text } from "@shopify/polaris";
 
-export const loader: LoaderFunction = async () => redirect("/dashboard/reports");
-
-export default function ReportsRedirect() {
-  return null;
+export default function ReportsPage() {
+  return (
+    <Page title="Reports">
+      <Layout>
+        <Layout.Section>
+          <Card sectioned>
+            <Text as="p">This is the Reports page.</Text>
+          </Card>
+        </Layout.Section>
+      </Layout>
+    </Page>
+  );
 }
