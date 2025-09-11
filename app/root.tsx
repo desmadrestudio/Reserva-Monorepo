@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import * as Polaris from "@shopify/polaris";
+import { HomeIcon } from "@shopify/polaris-icons";
 import { Link } from "@remix-run/react";
 import "@shopify/polaris/build/esm/styles.css";
 
@@ -38,6 +39,23 @@ const CustomLink = ({ url, external, ...rest }: Polaris.LinkLikeComponentProps) 
   return <Link to={url} {...rest} />;
 };
 
+function GlobalHomeButton() {
+  return (
+    <div
+      style={{
+        position: "fixed",
+        bottom: "76px", // keep above MobileTabBar
+        right: "16px",
+        zIndex: 500,
+      }}
+    >
+      <Polaris.Tooltip content="Home">
+        <Polaris.Button icon={HomeIcon} accessibilityLabel="Go to home" url="/" />
+      </Polaris.Tooltip>
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <html lang="en">
@@ -66,6 +84,7 @@ export default function App() {
                   </Polaris.Navigation>
                 }
               >
+                <GlobalHomeButton />
                 <Outlet />
                 <MobileTabBar />
               </Polaris.Frame>
