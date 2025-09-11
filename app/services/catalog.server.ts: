@@ -1,0 +1,46 @@
+// app/services/catalog.server.ts
+import { prisma } from "~/lib/prisma.server";
+
+// ---------- AddOns ----------
+export async function listAddOns() {
+  return prisma.addOn.findMany({ orderBy: { name: "asc" } });
+}
+
+export async function getAddOn(id: string) {
+  return prisma.addOn.findUnique({ where: { id } });
+}
+
+export async function createAddOn(data: { name: string; priceCents: number; description?: string | null; active?: boolean }) {
+  return prisma.addOn.create({ data: { ...data, active: data.active ?? true } });
+}
+
+export async function updateAddOn(id: string, data: { name?: string; priceCents?: number; description?: string | null; active?: boolean }) {
+  return prisma.addOn.update({ where: { id }, data });
+}
+
+export async function deleteAddOn(id: string) {
+  // Optional: check if in use by appointments before deleting
+  return prisma.addOn.delete({ where: { id } });
+}
+
+// ---------- Services ----------
+export async function listServices() {
+  return prisma.service.findMany({ orderBy: { name: "asc" } });
+}
+
+export async function getService(id: string) {
+  return prisma.service.findUnique({ where: { id } });
+}
+
+export async function createService(data: { name: string; basePriceCents: number; description?: string | null; active?: boolean }) {
+  return prisma.service.create({ data: { ...data, active: data.active ?? true } });
+}
+
+export async function updateService(id: string, data: { name?: string; basePriceCents?: number; description?: string | null; active?: boolean }) {
+  return prisma.service.update({ where: { id }, data });
+}
+
+export async function deleteService(id: string) {
+  // Optional: check if referenced elsewhere before deleting
+  return prisma.service.delete({ where: { id } });
+}

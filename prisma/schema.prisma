@@ -37,13 +37,29 @@ model Provider {
 
 // ✅ Bookable service
 model Service {
-  id        String  @id @default(cuid())
-  name      String
-  duration  Int
-  price     Float?
-  category  String?
-  notes     String?
-  variantId String?
+  id          String  @id @default(cuid())
+  name        String
+  basePrice   Int // price in cents
+  baseMinutes Int
+  category    String?
+  notes       String?
+  active      Boolean @default(true)
+
+  // Relations
+  addons       AddOn[]       @relation("ServiceAddons")
+  appointments Appointment[]
+}
+
+model AddOn {
+  id      String  @id @default(cuid())
+  name    String
+  price   Int // price in cents
+  minutes Int // duration impact in minutes
+  active  Boolean @default(true)
+
+  // optional: linkable to many services
+  services         Service[]          @relation("ServiceAddons")
+  appointmentItems AppointmentAddOn[]
 }
 
 // ✅ Weekly availability for a provider
@@ -65,11 +81,32 @@ model Appointment {
   time       String
   customer   String
   providerId String
-  service    String?
+  serviceId  String
   notes      String?
   createdAt  DateTime @default(now())
 
-  provider Provider @relation("ProviderAppointments", fields: [providerId], references: [id])
+  // Pricing & payment
+  subtotalCents Int
+  taxCents      Int
+  totalCents    Int
+  paymentMethod PaymentMethod @default(PAY_AT_SPA)
+  paymentStatus PaymentStatus @default(PENDING)
+
+  // Relations
+  provider Provider           @relation("ProviderAppointments", fields: [providerId], references: [id])
+  service  Service            @relation(fields: [serviceId], references: [id])
+  addons   AppointmentAddOn[]
+}
+
+model AppointmentAddOn {
+  id            String @id @default(cuid())
+  appointmentId String
+  addOnId       String
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+  addOn       AddOn       @relation(fields: [addOnId], references: [id])
+
+  @@unique([appointmentId, addOnId])
 }
 
 // Item available for booking or purchase
@@ -112,4 +149,16 @@ model Resource {
 model Unit {
   id   String @id @default(cuid())
   name String
+}
+
+enum PaymentMethod {
+  PAY_AT_SPA
+  PAY_NOW
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELED
+  REFUNDED
 }
