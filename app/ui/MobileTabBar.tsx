@@ -6,7 +6,7 @@ import type { Location } from "@remix-run/react";
 const tabs = [
   { label: "Calendar", path: "/appointments", icon: CalendarIcon },
   { label: "Checkout", path: "/checkout", icon: PointOfSaleIcon },
-  { label: "Book", path: "/appointments/new", icon: PlusIcon },
+  { label: "Book", path: "/booking", icon: PlusIcon },
   { label: "Customers", path: "/customers", icon: PersonIcon },
   { label: "More", path: "/settings", icon: MenuHorizontalIcon },
 ];
@@ -17,7 +17,7 @@ export default function MobileTabBar() {
   return (
     <nav className="mobile-tab-bar">
       {tabs.map((tab) => {
-        const isActive = location.pathname.startsWith(`/${tab.path}`);
+        const isActive = location.pathname.startsWith(tab.path);
         return (
           <Link key={tab.path} to={tab.path} className={`tab-link ${isActive ? "active" : ""}`}>
             <Icon source={tab.icon} color={isActive ? "interactive" : "subdued"} />
