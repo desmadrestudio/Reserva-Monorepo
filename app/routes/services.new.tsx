@@ -1,0 +1,79 @@
+// app/routes/services/new/index.tsx
+import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import { useActionData, useNavigation, Form } from "@remix-run/react";
+import { Page, Layout, Card, TextField, Checkbox, Button, InlineStack, BlockStack } from "@shopify/polaris";
+import { prisma } from "~/lib/prisma.server";
+
+export const loader = async (_: LoaderFunctionArgs) => json({});
+
+function parseNumber(v: FormDataEntryValue | null, fallback = 0) {
+  const n = Number(v ?? "");
+  return Number.isFinite(n) ? n : fallback;
+}
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const fd = await request.formData();
+
+  const name = String(fd.get("name") || "").trim();
+  const category = String(fd.get("category") || "").trim() || null;
+  const basePrice = parseNumber(fd.get("basePrice"), 0);
+  const defaultMinutes = parseNumber(fd.get("defaultMinutes"), 60);
+  const onlineBookable = fd.get("onlineBookable") === "on";
+  const active = fd.get("active") === "on";
+
+  const errors: Record<string, string> = {};
+  if (!name) errors.name = "Name is required.";
+  if (basePrice < 0) errors.basePrice = "Price must be ≥ 0.";
+  if (defaultMinutes <= 0) errors.defaultMinutes = "Duration must be > 0.";
+
+  if (Object.keys(errors).length) {
+    return json({ ok: false, errors }, { status: 400 });
+  }
+
+  await prisma.service.create({
+    data: {
+      name,
+      category,
+      basePrice,
+      onlineBookable,
+      active,
+      durations: {
+        create: { minutes: defaultMinutes, label: `${defaultMinutes} minutes`, priceDelta: 0 },
+      },
+    },
+    select: { id: true },
+  });
+
+  return redirect("/services");
+};
+
+export default function NewService() {
+  const nav = useNavigation();
+  const actionData = useActionData<typeof action>() as any;
+  const loading = nav.state === "submitting";
+
+  return (
+    <Page title="Create Service">
+      <Layout>
+        <Layout.Section>
+          <Card>
+            <Form method="post">
+              <BlockStack gap="400" padding="400">
+                <TextField label="Name" name="name" error={actionData?.errors?.name} autoFocus />
+                <TextField label="Category" name="category" helpText="(optional)" />
+                <TextField label="Base Price" name="basePrice" type="number" error={actionData?.errors?.basePrice} />
+                <TextField label="Default Duration (minutes)" name="defaultMinutes" type="number" error={actionData?.errors?.defaultMinutes} />
+                <Checkbox label="Bookable online" name="onlineBookable" defaultChecked />
+                <Checkbox label="Active (visible to staff & online)" name="active" defaultChecked />
+                <InlineStack align="end" gap="200">
+                  <Button url="/services">Cancel</Button>
+                  <Button primary submit loading={loading}>Save</Button>
+                </InlineStack>
+              </BlockStack>
+            </Form>
+          </Card>
+        </Layout.Section>
+      </Layout>
+    </Page>
+  );
+}
