@@ -1,4 +1,3 @@
-// app/routes/services/index.tsx
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useRouteError, Link as RemixLink, Outlet } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
@@ -9,7 +8,7 @@ type LoaderData = {
     id: string;
     name: string;
     category: string | null;
-    basePrice: number; // cents
+    basePrice: number;
     baseMinutes: number | null;
     updatedAt: Date | null;
   }>;
@@ -34,7 +33,10 @@ export default function ServicesIndex() {
   const { services } = useLoaderData<LoaderData>();
 
   return (
-    <Polaris.Page title="Services" primaryAction={{ content: "Create service", url: "/services/new" }}>
+    <Polaris.Page
+      title="Services"
+      primaryAction={{ content: "Create service", url: "/services/new" }}
+    >
       <Polaris.Layout>
         <Polaris.Layout.Section>
           {services.length === 0 ? (
@@ -72,7 +74,7 @@ export default function ServicesIndex() {
                     </Polaris.IndexTable.Cell>
                     <Polaris.IndexTable.Cell>{svc.category ?? "—"}</Polaris.IndexTable.Cell>
                     <Polaris.IndexTable.Cell>
-                      {Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format((svc.basePrice ?? 0) / 100)}
+                      {Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(svc.basePrice ?? 0)}
                     </Polaris.IndexTable.Cell>
                     <Polaris.IndexTable.Cell>{svc.baseMinutes ?? "—"}</Polaris.IndexTable.Cell>
                     <Polaris.IndexTable.Cell>
@@ -85,7 +87,8 @@ export default function ServicesIndex() {
           )}
         </Polaris.Layout.Section>
       </Polaris.Layout>
-          {/* Child routes (e.g., /services/new) render here */
+
+      {/* Child routes (e.g., /services/new) render here */}
       <Outlet />
     </Polaris.Page>
   );
@@ -103,8 +106,6 @@ export function ErrorBoundary() {
         <Polaris.Text variant="headingMd">Route error</Polaris.Text>
         <pre style={{ whiteSpace: "pre-wrap" }}>{message}</pre>
       </Polaris.Card>
-          {/* Child routes (e.g., /services/new) render here */
-      <Outlet />
     </Polaris.Page>
   );
 }
@@ -113,8 +114,6 @@ export function CatchBoundary() {
   return (
     <Polaris.Page title="Not found">
       <Polaris.Card sectioned>Page not found.</Polaris.Card>
-          {/* Child routes (e.g., /services/new) render here */
-      <Outlet />
     </Polaris.Page>
   );
 }
