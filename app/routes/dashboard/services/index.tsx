@@ -1,5 +1,5 @@
 // This route was migrated from a dot-route to a folder-based structure for better scalability.
-import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import { useCallback } from "react";
 import * as Polaris from "@shopify/polaris";
@@ -30,7 +30,16 @@ const CATEGORIES = [
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
-  const services = await prisma.service.findMany();
+  const services = await prisma.service.findMany({
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+      baseMinutes: true,
+      basePrice: true,
+      category: true,
+    },
+  });
   return json({ services });
 };
 
@@ -38,27 +47,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await authenticate.admin(request);
   await requireUserId(request);
   const formData = await request.formData();
-  const name = formData.get("name")?.toString().trim();
-  const priceRaw = formData.get("price")?.toString();
-  const duration = formData.get("duration")?.toString();
-  const notes = formData.get("notes")?.toString();
-  const variantId = formData.get("variantId")?.toString() || undefined;
+  const name = formData.get("name")?.toString().trim() || "";
+  const category = formData.get("category")?.toString().trim() || null;
+  const priceRaw = formData.get("price")?.toString() || ""; // dollars string, e.g. "$25.00"
+  const duration = formData.get("duration")?.toString() || ""; // minutes string
+  const notes = formData.get("notes")?.toString() || null;
 
   if (!name || !duration) {
     return json({ error: "Name and duration are required" }, { status: 400 });
   }
 
+  const dollars = Number(priceRaw.replace(/[^0-9.]/g, ""));
+  const basePrice = Number.isFinite(dollars) ? Math.round(dollars * 100) : 0; // store cents
+  const baseMinutes = Number(duration);
+
   await prisma.service.create({
     data: {
       name,
-      duration: Number(duration),
-      price: priceRaw ? Number(priceRaw.replace(/[^0-9.]/g, "")) : undefined,
-      variantId,
+      category,
+      basePrice,
+      baseMinutes,
       notes,
+      active: true,
     },
   });
 
-  return json({ success: true });
+  // Redirect to refresh the list
+  return redirect("/dashboard/services");
 };
 
 export default function DashboardServices() {
@@ -118,7 +133,9 @@ export default function DashboardServices() {
             ) : (
               <Stack vertical spacing="tight">
                 {services.map((svc) => (
-                  <Text key={svc.id}>{svc.name} - {svc.duration} mins</Text>
+                  <Text key={svc.id}>
+                    {svc.name} — {svc.baseMinutes} mins — {Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format((svc.basePrice ?? 0) / 100)}
+                  </Text>
                 ))}
               </Stack>
             )}
