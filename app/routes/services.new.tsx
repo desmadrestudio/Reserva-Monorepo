@@ -1,8 +1,10 @@
 // app/routes/services.new.tsx
 import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { useActionData, useNavigation, Form } from "@remix-run/react";
+import { useState } from "react";
 import { Page, Layout, Card, TextField, Checkbox, Button, InlineStack, BlockStack } from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
+import { dollarsToCents } from "~/utils/money";
 
 export const loader = async (_: LoaderFunctionArgs) => json({});
 
@@ -33,7 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     data: {
       name,
       category,
-      basePrice: Math.round(basePriceDollars * 100), // store cents
+      basePrice: dollarsToCents(basePriceDollars),
       baseMinutes,
       active,
     },
@@ -47,6 +49,7 @@ export default function NewService() {
   const nav = useNavigation();
   const actionData = useActionData<typeof action>() as any;
   const loading = nav.state === "submitting";
+  const [active, setActive] = useState(true);
 
   return (
     <Page title="Create Service">
@@ -54,15 +57,20 @@ export default function NewService() {
         <Layout.Section>
           <Card>
             <Form method="post">
-              <BlockStack gap="400" padding="400">
-                <TextField label="Name" name="name" error={actionData?.errors?.name} autoFocus />
-                <TextField label="Category" name="category" helpText="(optional)" />
-                <TextField label="Base Price (USD)" name="basePrice" type="number" error={actionData?.errors?.basePrice} />
-                <TextField label="Default Duration (minutes)" name="baseMinutes" type="number" error={actionData?.errors?.baseMinutes} />
-                <Checkbox label="Active (visible to staff & online)" name="active" defaultChecked />
+              <BlockStack gap="400">
+                <TextField label="Name" name="name" error={actionData?.errors?.name} autoFocus autoComplete="off" />
+                <TextField label="Category" name="category" helpText="(optional)" autoComplete="off" />
+                <TextField label="Base Price (USD)" name="basePrice" type="number" error={actionData?.errors?.basePrice} autoComplete="off" />
+                <TextField label="Default Duration (minutes)" name="baseMinutes" type="number" error={actionData?.errors?.baseMinutes} autoComplete="off" />
+                <Checkbox
+                  label="Active (visible to staff & online)"
+                  checked={active}
+                  onChange={(checked) => setActive(checked)}
+                />
+                <input type="hidden" name="active" value="on" disabled={!active} />
                 <InlineStack align="end" gap="200">
                   <Button url="/services">Cancel</Button>
-                  <Button primary submit loading={loading}>Save</Button>
+                  <Button submit loading={loading}>Save</Button>
                 </InlineStack>
               </BlockStack>
             </Form>
