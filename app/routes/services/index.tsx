@@ -2,30 +2,56 @@ import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useRouteError, Link as RemixLink, Outlet } from "@remix-run/react";
 import * as Polaris from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
+import { centsToDollars } from "~/utils/money";
 
-type LoaderData = {
-  services: Array<{
-    id: string;
-    name: string;
-    category: string | null;
-    basePrice: number;
-    baseMinutes: number | null;
-    updatedAt: Date | null;
-  }>;
+type ServiceListItem = {
+  id: string;
+  name: string;
+  active: boolean;
+  subline: string; // "Multiple Durations" | "<minutes> mins"
+  priceCents: number | null; // null when multiple durations
 };
 
+type LoaderData = { services: ServiceListItem[] };
+
 export const loader = async (_: LoaderFunctionArgs) => {
-  const services = await prisma.service.findMany({
+  const rows = await prisma.service.findMany({
     orderBy: { name: "asc" },
     select: {
       id: true,
       name: true,
-      category: true,
       basePrice: true,
       baseMinutes: true,
-      updatedAt: true,
+      active: true,
+      _count: { select: { durations: true } },
+      durations: {
+        orderBy: { minutes: "asc" },
+        take: 1,
+        select: { minutes: true, priceDelta: true },
+      },
     },
   });
+
+  const services: ServiceListItem[] = rows.map((s) => {
+    const count = s._count.durations;
+    if (count > 1) {
+      return { id: s.id, name: s.name, active: s.active, subline: "Multiple Durations", priceCents: null };
+    }
+    if (count === 1) {
+      const d = s.durations[0]!;
+      const priceCents = (s.basePrice ?? 0) + (d?.priceDelta ?? 0);
+      return { id: s.id, name: s.name, active: s.active, subline: `${d.minutes} mins`, priceCents };
+    }
+    // No extra durations: show base
+    return {
+      id: s.id,
+      name: s.name,
+      active: s.active,
+      subline: `${s.baseMinutes ?? 0} mins`,
+      priceCents: s.basePrice ?? 0,
+    };
+  });
+
   return json<LoaderData>({ services });
 };
 
@@ -33,20 +59,15 @@ export default function ServicesIndex() {
   const { services } = useLoaderData<LoaderData>();
 
   return (
-    <Polaris.Page
-      title="Services"
-      primaryAction={{ content: "Create service", url: "/services/new" }}
-    >
+    <Polaris.Page title="Services" primaryAction={{ content: "Create Service", url: "/services/new" }}>
       <Polaris.Layout>
         <Polaris.Layout.Section>
           {services.length === 0 ? (
             <Polaris.Card>
-              <Polaris.BlockStack gap="300" padding="400">
-                <Polaris.Text variant="headingMd">No services yet</Polaris.Text>
-                <Polaris.Text tone="subdued">
-                  Create your first service to start taking bookings.
-                </Polaris.Text>
-                <Polaris.Button primary url="/services/new">Create service</Polaris.Button>
+              <Polaris.BlockStack gap="300">
+                <Polaris.Text as="p" variant="headingMd">No services yet</Polaris.Text>
+                <Polaris.Text as="p" tone="subdued">Create your first service to start taking bookings.</Polaris.Text>
+                <Polaris.Button url="/services/new">Create Service</Polaris.Button>
               </Polaris.BlockStack>
             </Polaris.Card>
           ) : (
@@ -55,30 +76,48 @@ export default function ServicesIndex() {
                 resourceName={{ singular: "service", plural: "services" }}
                 itemCount={services.length}
                 selectable={false}
+                condensed
                 headings={[
-                  { title: "Name" },
-                  { title: "Category" },
-                  { title: "Base price" },
-                  { title: "Default minutes" },
-                  { title: "Updated" },
+                  { title: "Service" },
+                  { title: "Price" },
+                  { title: "Status" },
+                  { title: "" },
                 ]}
               >
                 {services.map((svc, idx) => (
                   <Polaris.IndexTable.Row id={svc.id} key={svc.id} position={idx}>
                     <Polaris.IndexTable.Cell>
-                      <RemixLink to={`/services/${svc.id}`} style={{ textDecoration: "none" }}>
-                        <Polaris.Text as="span" variant="bodyMd" fontWeight="medium">
-                          {svc.name}
+                      <Polaris.InlineStack align="start" gap="300">
+                        <Polaris.BlockStack gap="050">
+                          <RemixLink to={`/services/${svc.id}`} style={{ textDecoration: "none" }}>
+                            <Polaris.Text as="span" variant="bodyMd" fontWeight="medium">
+                              {svc.name}
+                            </Polaris.Text>
+                          </RemixLink>
+                          <Polaris.Text as="span" tone="subdued" variant="bodySm">
+                            {svc.subline}
+                          </Polaris.Text>
+                        </Polaris.BlockStack>
+                      </Polaris.InlineStack>
+                    </Polaris.IndexTable.Cell>
+                    <Polaris.IndexTable.Cell>
+                      {svc.priceCents == null ? (
+                        <Polaris.Text as="span" tone="subdued">—</Polaris.Text>
+                      ) : (
+                        <Polaris.Text as="span">
+                          {Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(centsToDollars(svc.priceCents ?? 0))}
                         </Polaris.Text>
-                      </RemixLink>
+                      )}
                     </Polaris.IndexTable.Cell>
-                    <Polaris.IndexTable.Cell>{svc.category ?? "—"}</Polaris.IndexTable.Cell>
                     <Polaris.IndexTable.Cell>
-                      {Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(svc.basePrice ?? 0)}
+                      <Polaris.Badge tone={svc.active ? "success" : "critical"}>
+                        {svc.active ? "Active" : "Inactive"}
+                      </Polaris.Badge>
                     </Polaris.IndexTable.Cell>
-                    <Polaris.IndexTable.Cell>{svc.baseMinutes ?? "—"}</Polaris.IndexTable.Cell>
                     <Polaris.IndexTable.Cell>
-                      {svc.updatedAt ? new Date(svc.updatedAt).toLocaleString() : "—"}
+                      <Polaris.Button url={`/services/${svc.id}`} size="slim">
+                        Edit
+                      </Polaris.Button>
                     </Polaris.IndexTable.Cell>
                   </Polaris.IndexTable.Row>
                 ))}
@@ -88,7 +127,6 @@ export default function ServicesIndex() {
         </Polaris.Layout.Section>
       </Polaris.Layout>
 
-      {/* Child routes (e.g., /services/new) render here */}
       <Outlet />
     </Polaris.Page>
   );
@@ -102,8 +140,8 @@ export function ErrorBoundary() {
     "Something went wrong.";
   return (
     <Polaris.Page title="Services">
-      <Polaris.Card sectioned>
-        <Polaris.Text variant="headingMd">Route error</Polaris.Text>
+      <Polaris.Card>
+        <Polaris.Text as="h2" variant="headingMd">Route error</Polaris.Text>
         <pre style={{ whiteSpace: "pre-wrap" }}>{message}</pre>
       </Polaris.Card>
     </Polaris.Page>
@@ -113,7 +151,9 @@ export function ErrorBoundary() {
 export function CatchBoundary() {
   return (
     <Polaris.Page title="Not found">
-      <Polaris.Card sectioned>Page not found.</Polaris.Card>
+      <Polaris.Card>
+        <Polaris.Text as="p">Page not found.</Polaris.Text>
+      </Polaris.Card>
     </Polaris.Page>
   );
 }

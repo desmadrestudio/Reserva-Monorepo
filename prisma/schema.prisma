@@ -46,11 +46,29 @@ model Service {
   category    String?
   notes       String?
   active      Boolean @default(true)
+  bookableOnline  Boolean @default(true)
+  requiresResource Boolean @default(false)
   updatedAt   DateTime @updatedAt
 
   // Relations
   addons       AddOn[]       @relation("ServiceAddons")
   appointments Appointment[]
+  durations    ServiceDuration[]
+  resources    ServiceResource[]
+}
+
+// Additional durations/options for a Service
+model ServiceDuration {
+  id         String  @id @default(cuid())
+  serviceId  String
+  minutes    Int
+  label      String?
+  priceDelta Int // delta in cents applied to base price
+  updatedAt  DateTime @updatedAt
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, minutes])
 }
 
 model AddOn {
@@ -153,6 +171,19 @@ model Option {
 model Resource {
   id   String @id @default(cuid())
   name String
+
+  // Relations
+  serviceLinks ServiceResource[]
+}
+
+model ServiceResource {
+  serviceId  String
+  resourceId String
+
+  service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@id([serviceId, resourceId])
 }
 
 // Unit of measurement
