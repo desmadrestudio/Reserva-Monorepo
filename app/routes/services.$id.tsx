@@ -17,7 +17,7 @@ import {
   Toast,
 } from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
-import { centsToDollars } from "~/utils/money";
+import { centsToDollars, dollarsToCents } from "~/utils/money";
 import { useEffect, useState } from "react";
 
 type LoaderData = {
@@ -30,6 +30,10 @@ type LoaderData = {
     active: boolean;
     bookableOnline: boolean;
     requiresResource: boolean;
+    processingMinutes: number;
+    blockExtraMinutes: number;
+    displayPriceNote: string | null;
+    taxable: boolean;
     updatedAt: Date | null;
   };
   durations: Array<{
@@ -64,6 +68,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
       active: true,
       bookableOnline: true,
       requiresResource: true,
+      processingMinutes: true,
+      blockExtraMinutes: true,
+      displayPriceNote: true,
+      taxable: true,
       updatedAt: true,
     },
   });
@@ -122,6 +130,57 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!id) throw new Response("Missing id", { status: 400 });
   const fd = await request.formData();
   const intent = String(fd.get("_intent") || "");
+
+  if (intent === "updateService") {
+    const name = (fd.get("name")?.toString() || "").trim();
+    const category = (fd.get("category")?.toString() || "").trim() || null;
+    const basePriceInput = fd.get("basePrice")?.toString() || "0";
+    const baseMinutesStr = fd.get("baseMinutes")?.toString() || "0";
+    const active = fd.get("active")?.toString() === "on";
+    const bookableOnline = fd.get("bookableOnline")?.toString() === "on";
+    const requiresResource = fd.get("requiresResource")?.toString() === "on";
+    const processingEnabled = fd.get("processingEnabled")?.toString() === "on";
+    const processingMinutesStr = fd.get("processingMinutes")?.toString() || "0";
+    const blockExtraEnabled = fd.get("blockExtraEnabled")?.toString() === "on";
+    const blockExtraMinutesStr = fd.get("blockExtraMinutes")?.toString() || "0";
+    const displayPriceNote = (fd.get("displayPriceNote")?.toString() || "").trim() || null;
+    const taxable = (fd.get("taxable")?.toString() || "nontax") === "taxable";
+
+    const errors: Record<string, string> = {};
+    if (!name) errors.name = "Name is required";
+    const baseMinutes = Number(baseMinutesStr);
+    if (!Number.isFinite(baseMinutes) || baseMinutes <= 0) errors.baseMinutes = "Duration must be > 0";
+    const basePrice = dollarsToCents(basePriceInput);
+    if (basePrice < 0) errors.basePrice = "Price must be ≥ 0";
+    const processingMinutes = processingEnabled ? Number(processingMinutesStr) : 0;
+    if (processingMinutes < 0 || !Number.isFinite(processingMinutes)) errors.processingMinutes = "Must be ≥ 0";
+    const blockExtraMinutes = blockExtraEnabled ? Number(blockExtraMinutesStr) : 0;
+    if (blockExtraMinutes < 0 || !Number.isFinite(blockExtraMinutes)) errors.blockExtraMinutes = "Must be ≥ 0";
+    if (Object.keys(errors).length) return json({ ok: false, form: "updateService", errors }, { status: 400 });
+
+    await prisma.service.update({
+      where: { id },
+      data: {
+        name,
+        category,
+        basePrice,
+        baseMinutes,
+        active,
+        bookableOnline,
+        requiresResource,
+        processingMinutes,
+        blockExtraMinutes,
+        displayPriceNote,
+        taxable,
+      },
+    });
+    return redirect(`/services/${id}?ok=updated`);
+  }
+
+  if (intent === "deleteService") {
+    await prisma.service.delete({ where: { id } });
+    return redirect("/services");
+  }
 
   // Accept a couple of intent spellings for ergonomics
   const isCreate = ["createDuration", "add-duration", "create"].includes(intent);
@@ -214,6 +273,18 @@ export default function ServiceDurationsPage() {
   const attachingResource = nav.state === "submitting" && nav.formData?.get("_intent") === "attachResource";
 
   const [toast, setToast] = useState<string | null>(null);
+  const [name, setName] = useState(svc.name);
+  const [category, setCategory] = useState(svc.category ?? "");
+  const [priceDollars, setPriceDollars] = useState(String(centsToDollars(svc.basePrice ?? 0)));
+  const [minutes, setMinutes] = useState(String(svc.baseMinutes ?? 0));
+  const [active, setActive] = useState(!!svc.active);
+  const [bookable, setBookable] = useState(!!svc.bookableOnline);
+  const [processingEnabled, setProcessingEnabled] = useState(!!svc.processingMinutes);
+  const [processingMinutes, setProcessingMinutes] = useState(String(svc.processingMinutes || 0));
+  const [blockExtraEnabled, setBlockExtraEnabled] = useState(!!svc.blockExtraMinutes);
+  const [blockExtraMinutes, setBlockExtraMinutes] = useState(String(svc.blockExtraMinutes || 0));
+  const [displayPriceNote, setDisplayPriceNote] = useState(svc.displayPriceNote || "");
+  const [taxOption, setTaxOption] = useState(svc.taxable ? "taxable" : "nontax");
   useEffect(() => {
     if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
@@ -224,6 +295,7 @@ export default function ServiceDurationsPage() {
           requiresResource: "Resource requirement updated",
           attachResource: "Resource attached",
           detachResource: "Resource removed",
+          updated: "Service updated",
         };
         setToast(map[ok] || "Saved");
         sp.delete("ok");
@@ -234,18 +306,62 @@ export default function ServiceDurationsPage() {
   }, []);
 
   return (
-    <Page title={`Service: ${svc.name}`} backAction={{ url: "/services" }}>
+    <Page
+      title={`Service: ${svc.name}`}
+      backAction={{ url: "/services" }}
+      primaryAction={{
+        content: "Save",
+        onAction: () => {
+          if (typeof window !== "undefined") {
+            (document.getElementById("svc-edit-form") as HTMLFormElement | null)?.requestSubmit();
+          }
+        },
+      }}
+    >
       {toast && <Toast content={toast} onDismiss={() => setToast(null)} />}
       <Layout>
         <Layout.Section>
           <Card>
             <BlockStack gap="300">
-              <Text as="h2" variant="headingMd">Summary</Text>
-              <Text as="p">
-                Base: {Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(centsToDollars(svc.basePrice ?? 0))} · {svc.baseMinutes} minutes
-              </Text>
-              {svc.category && <Text as="p" tone="subdued">Category: {svc.category}</Text>}
-              {!svc.active && <Text as="p" tone="critical">Inactive</Text>}
+              <Text as="h2" variant="headingMd">Service Details</Text>
+              <Form method="post" replace id="svc-edit-form">
+                <input type="hidden" name="_intent" value="updateService" />
+                <BlockStack gap="200">
+                  <TextField label="Name" name="name" value={name} onChange={(v) => setName(v)} autoComplete="off" error={actionData?.form === "updateService" ? actionData?.errors?.name : undefined} />
+                  <TextField label="Category" name="category" value={category} onChange={(v) => setCategory(v)} autoComplete="off" />
+                  <InlineStack gap="200">
+                    <TextField label="Base price (USD)" name="basePrice" type="number" value={priceDollars} onChange={(v) => setPriceDollars(v)} autoComplete="off" error={actionData?.form === "updateService" ? actionData?.errors?.basePrice : undefined} />
+                    <TextField label="Default minutes" name="baseMinutes" type="number" value={minutes} onChange={(v) => setMinutes(v)} autoComplete="off" error={actionData?.form === "updateService" ? actionData?.errors?.baseMinutes : undefined} />
+                  </InlineStack>
+                  <InlineStack gap="400">
+                    <Checkbox label="Active" checked={active} onChange={(v) => setActive(v)} />
+                    <Checkbox label="Bookable online" checked={bookable} onChange={(v) => setBookable(v)} />
+                  </InlineStack>
+                  <input type="hidden" name="active" value="on" disabled={!active} />
+                  <input type="hidden" name="bookableOnline" value="on" disabled={!bookable} />
+                  <Checkbox label="Add processing time" checked={processingEnabled} onChange={(v) => setProcessingEnabled(!!v)} />
+                  {processingEnabled && (
+                    <TextField label="Processing minutes" name="processingMinutes" type="number" value={processingMinutes} onChange={(v) => setProcessingMinutes(v)} />
+                  )}
+                  <input type="hidden" name="processingEnabled" value="on" disabled={!processingEnabled} />
+                  <Checkbox label="Block Extra Time" checked={blockExtraEnabled} onChange={(v) => setBlockExtraEnabled(!!v)} />
+                  {blockExtraEnabled && (
+                    <TextField label="Extra minutes blocked" name="blockExtraMinutes" type="number" value={blockExtraMinutes} onChange={(v) => setBlockExtraMinutes(v)} helpText="Extra time will be blocked for clean up, transition, etc." />
+                  )}
+                  <input type="hidden" name="blockExtraEnabled" value="on" disabled={!blockExtraEnabled} />
+                  <Text as="h3" variant="headingSm">Online Booking</Text>
+                  <TextField label="Display Price" name="displayPriceNote" value={displayPriceNote} onChange={(v) => setDisplayPriceNote(v)} placeholder="E.g. Call Us" helpText="Optional: clarify pricing details for customers booking online." />
+                  <Text as="h3" variant="headingSm">Taxes</Text>
+                  <Select label="Tax treatment" name="taxable" options={[{ label: "Nontaxable", value: "nontax" }, { label: "Taxable", value: "taxable" }]} value={taxOption} onChange={(v) => setTaxOption(v)} />
+                  <InlineStack align="end" gap="200">
+                    <Button submit loading={nav.state === "submitting" && nav.formData?.get("_intent") === "updateService"}>Save</Button>
+                    <Form method="post" replace>
+                      <input type="hidden" name="_intent" value="deleteService" />
+                      <Button tone="critical" submit>Delete Service</Button>
+                    </Form>
+                  </InlineStack>
+                </BlockStack>
+              </Form>
             </BlockStack>
           </Card>
         </Layout.Section>
@@ -265,6 +381,7 @@ export default function ServiceDurationsPage() {
                 />
                 <button id='tg-book-submit' type='submit' hidden />
               </Form>
+              <Text as='p' tone='subdued'>Assigned Team Members: All Team Members</Text>
             </BlockStack>
           </Card>
         </Layout.Section>

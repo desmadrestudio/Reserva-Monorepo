@@ -48,6 +48,12 @@ model Service {
   active      Boolean @default(true)
   bookableOnline  Boolean @default(true)
   requiresResource Boolean @default(false)
+  // New UI fields to align with service editor
+  processingMinutes  Int      @default(0) // optional post-processing time
+  blockExtraMinutes  Int      @default(0) // extra blocked time after service
+  displayPriceNote   String?           // text shown on online booking
+  taxable            Boolean  @default(false)
+  imageUrl           String?
   updatedAt   DateTime @updatedAt
 
   // Relations
