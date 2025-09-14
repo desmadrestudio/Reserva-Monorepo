@@ -1,4 +1,4 @@
-// app/routes/services/new/index.tsx
+// app/routes/services.new.tsx
 import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { useActionData, useNavigation, Form } from "@remix-run/react";
 import { Page, Layout, Card, TextField, Checkbox, Button, InlineStack, BlockStack } from "@shopify/polaris";
@@ -16,15 +16,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const name = String(fd.get("name") || "").trim();
   const category = String(fd.get("category") || "").trim() || null;
-  const basePrice = parseNumber(fd.get("basePrice"), 0);
-  const defaultMinutes = parseNumber(fd.get("defaultMinutes"), 60);
-  const onlineBookable = fd.get("onlineBookable") === "on";
+  const basePriceDollars = parseNumber(fd.get("basePrice"), 0);
+  const baseMinutes = parseNumber(fd.get("baseMinutes"), 60);
   const active = fd.get("active") === "on";
 
   const errors: Record<string, string> = {};
   if (!name) errors.name = "Name is required.";
-  if (basePrice < 0) errors.basePrice = "Price must be ≥ 0.";
-  if (defaultMinutes <= 0) errors.defaultMinutes = "Duration must be > 0.";
+  if (basePriceDollars < 0) errors.basePrice = "Price must be ≥ 0.";
+  if (baseMinutes <= 0) errors.baseMinutes = "Duration must be > 0.";
 
   if (Object.keys(errors).length) {
     return json({ ok: false, errors }, { status: 400 });
@@ -34,12 +33,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     data: {
       name,
       category,
-      basePrice,
-      onlineBookable,
+      basePrice: Math.round(basePriceDollars * 100), // store cents
+      baseMinutes,
       active,
-      durations: {
-        create: { minutes: defaultMinutes, label: `${defaultMinutes} minutes`, priceDelta: 0 },
-      },
     },
     select: { id: true },
   });
@@ -61,9 +57,8 @@ export default function NewService() {
               <BlockStack gap="400" padding="400">
                 <TextField label="Name" name="name" error={actionData?.errors?.name} autoFocus />
                 <TextField label="Category" name="category" helpText="(optional)" />
-                <TextField label="Base Price" name="basePrice" type="number" error={actionData?.errors?.basePrice} />
-                <TextField label="Default Duration (minutes)" name="defaultMinutes" type="number" error={actionData?.errors?.defaultMinutes} />
-                <Checkbox label="Bookable online" name="onlineBookable" defaultChecked />
+                <TextField label="Base Price (USD)" name="basePrice" type="number" error={actionData?.errors?.basePrice} />
+                <TextField label="Default Duration (minutes)" name="baseMinutes" type="number" error={actionData?.errors?.baseMinutes} />
                 <Checkbox label="Active (visible to staff & online)" name="active" defaultChecked />
                 <InlineStack align="end" gap="200">
                   <Button url="/services">Cancel</Button>
