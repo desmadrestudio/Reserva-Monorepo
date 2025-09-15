@@ -119,6 +119,7 @@ export default function CalendarPage() {
   })();
 
   const hours = Array.from({ length: endHour - startHour + 1 }, (_, i) => startHour + i);
+  const weekUrl = `/calendar/week?date=${dateISO}`;
 
   return (
     <Page title="Calendar" subtitle={readable} primaryAction={{ content: "Today", url: `/calendar?date=${toISODate(new Date())}` }}>
@@ -127,10 +128,16 @@ export default function CalendarPage() {
           <Card>
             <BlockStack gap="300">
               <InlineStack align="space-between">
-                <ButtonGroup>
-                  <Button url={`/calendar?date=${prevDate}`}>&larr; Prev</Button>
-                  <Button url={`/calendar?date=${nextDate}`}>Next &rarr;</Button>
-                </ButtonGroup>
+                <InlineStack gap="200">
+                  <ButtonGroup>
+                    <Button url={`/calendar?date=${prevDate}`}>&larr; Prev</Button>
+                    <Button url={`/calendar?date=${nextDate}`}>Next &rarr;</Button>
+                  </ButtonGroup>
+                  <ButtonGroup>
+                    <Button disabled>Month</Button>
+                    <Button url={weekUrl}>Week</Button>
+                  </ButtonGroup>
+                </InlineStack>
                 <Text as="p" tone="subdued">{providers.length} team member{providers.length === 1 ? "" : "s"}</Text>
               </InlineStack>
 
