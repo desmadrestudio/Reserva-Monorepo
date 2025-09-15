@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import * as Polaris from "@shopify/polaris";
@@ -13,7 +14,6 @@ import "@shopify/polaris/build/esm/styles.css";
 
 import styles from "./styles/global.css";
 import MobileTabBar from "./ui/MobileTabBar"; // 🔄 updated path after ui refactor
-import { desktopNavigation } from "./config/sidebarMenu.config";
 import { CartProvider } from "./ui/CartProvider"; // 🔄 updated path after ui refactor
 import { BookingCartProvider } from "./ui/BookingCartProvider"; // 🔄 updated path after ui refactor
 
@@ -34,10 +34,36 @@ const i18n = {
 };
 
 // ✅ Custom link component to integrate Remix with Polaris
-const CustomLink = ({ url, external, ...rest }: Polaris.LinkLikeComponentProps) => {
+const CustomLink = ({ url, external, ...rest }: any) => {
   if (external) return <a href={url} {...rest} />;
   return <Link to={url} {...rest} />;
 };
+
+function SidebarNav() {
+  const { pathname } = useLocation();
+  const items = [
+    { label: "Home", to: "/" },
+    { label: "Calendar", to: "/calendar" },
+    { label: "Checkout", to: "/checkout" },
+    { label: "Services", to: "/services" },
+    { label: "Memberships & Rewards", to: "/memberships" },
+    { label: "Payments & Invoices", to: "/payments" },
+    { label: "Customers", to: "/customers" },
+    { label: "Reports", to: "/reports" },
+    { label: "Staff", to: "/staff" },
+    { label: "Settings", to: "/settings" },
+  ];
+  const sectionItems = items.map((it) => ({
+    label: it.label,
+    url: it.to,
+    selected: it.to === "/" ? pathname === "/" : pathname.startsWith(it.to),
+  }));
+  return (
+    <Polaris.Navigation location={pathname}>
+      <Polaris.Navigation.Section items={sectionItems} />
+    </Polaris.Navigation>
+  );
+}
 
 function GlobalHomeButton() {
   return (
@@ -75,15 +101,7 @@ export default function App() {
         <BookingCartProvider>
           <CartProvider>
             <Polaris.AppProvider i18n={i18n} linkComponent={CustomLink}>
-              <Polaris.Frame
-                navigation={
-                  <Polaris.Navigation location="/">
-                    <Polaris.Navigation.Section
-                      items={desktopNavigation}
-                    />
-                  </Polaris.Navigation>
-                }
-              >
+              <Polaris.Frame navigation={<SidebarNav />}>
                 <GlobalHomeButton />
                 <Outlet />
                 <MobileTabBar />

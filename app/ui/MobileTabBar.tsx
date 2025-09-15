@@ -4,7 +4,7 @@ import { CalendarIcon, PointOfSaleIcon, PlusIcon, PersonIcon, MenuHorizontalIcon
 import type { Location } from "@remix-run/react";
 
 const tabs = [
-  { label: "Calendar", path: "/appointments", icon: CalendarIcon },
+  { label: "Calendar", path: "/calendar", icon: CalendarIcon },
   { label: "Checkout", path: "/checkout", icon: PointOfSaleIcon },
   { label: "Book", path: "/booking", icon: PlusIcon },
   { label: "Customers", path: "/customers", icon: PersonIcon },

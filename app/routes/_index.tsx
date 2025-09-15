@@ -45,8 +45,8 @@ export default function Home() {
                 Go to Dashboard
               </Button>
               <Button url="/booking">Book New Appointment</Button>
-              <Button url="/appointments" plain>
-                View All Appointments
+              <Button url="/calendar" plain>
+                View Calendar
               </Button>
             </div>
           </Card>

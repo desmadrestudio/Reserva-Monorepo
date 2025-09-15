@@ -25,7 +25,7 @@ export interface NavigationItem {
 
 export const navigationItems: NavigationItem[] = [
   { label: "Home", url: "/", icon: HomeIcon },
-  { label: "Appointments", url: "/appointments", icon: CalendarIcon },
+  { label: "Calendar", url: "/calendar", icon: CalendarIcon },
   { label: "Checkout", url: "/checkout", icon: PointOfSaleIcon },
   { label: "Services", url: "/services", icon: ProductIcon },
   { label: "Memberships & Rewards", url: "/memberships", icon: GiftCardIcon },
@@ -39,7 +39,7 @@ export const navigationItems: NavigationItem[] = [
 export const desktopNavigation: NavigationItem[] = navigationItems;
 
 export const mobileNavigation: NavigationItem[] = [
-  { label: "Appointments", url: "/appointments", icon: CalendarIcon },
+  { label: "Calendar", url: "/calendar", icon: CalendarIcon },
   { label: "Checkout", url: "/checkout", icon: PointOfSaleIcon },
   { label: "Customers", url: "/customers", icon: PersonIcon },
   { label: "More", url: "/settings", icon: MenuHorizontalIcon },
