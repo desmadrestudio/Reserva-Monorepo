@@ -2,23 +2,12 @@ import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Link as RemixLink, useLoaderData, useRouteError } from "@remix-run/react";
 import { Page, Layout, Card, Text, Button, InlineStack, BlockStack, ButtonGroup, Badge } from "@shopify/polaris";
 import { prisma } from "~/lib/prisma.server";
-
-type Provider = { id: string; name: string };
-type CalendarEvent = {
-  id: string;
-  providerId: string;
-  customer: string;
-  serviceName: string;
-  startMinutes: number; // minutes from midnight
-  durationMinutes: number;
-  color: string;
-};
+import { buildMonthGrid, addDays as addDaysUtil, addMonths as addMonthsUtil } from "~/utils/calendar";
 
 type LoaderData = {
   dateISO: string;
   readable: string;
-  providers: Provider[];
-  events: CalendarEvent[];
+  countsByDay: Record<string, number>;
 };
 
 function parseDateParam(dateStr?: string | null): Date {
@@ -55,38 +44,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const date = parseDateParam(url.searchParams.get("date"));
   const dateISO = toISODate(date);
-  const start = startOfDay(date);
-  const end = endOfDay(date);
-
-  const providers = await prisma.provider.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } });
-
-  const appts = await prisma.appointment.findMany({
-    where: { date: { gte: start, lte: end } },
-    orderBy: { date: "asc" },
-    include: {
-      service: { select: { name: true, baseMinutes: true, processingMinutes: true, blockExtraMinutes: true } },
-      addons: { include: { addOn: { select: { minutes: true } } } },
-    },
-  });
-
-  const colors = ["#36B3A8", "#E37329", "#8A63D2", "#5C6AC4", "#47C1BF", "#DE3618"]; // simple palette
-  const events: CalendarEvent[] = appts.map((a, i) => {
-    const startMinutes = parseTimeToMinutes(a.time || "12:00 PM");
-    const base = a.service?.baseMinutes ?? 60;
-    const addOnMinutes = (a.addons || []).reduce((sum, it) => sum + (it.addOn?.minutes ?? 0), 0);
-    const processing = a.service?.processingMinutes ?? 0;
-    const blockExtra = a.service?.blockExtraMinutes ?? 0;
-    const durationMinutes = base + addOnMinutes + processing + blockExtra;
-    return {
-      id: a.id,
-      providerId: a.providerId,
-      customer: a.customer,
-      serviceName: a.service?.name ?? "Service",
-      startMinutes,
-      durationMinutes,
-      color: colors[i % colors.length],
-    };
-  });
+  // Remove day-grid specific queries; month view uses counts only
 
   const readable = date.toLocaleDateString(undefined, {
     weekday: "long",
@@ -95,34 +53,51 @@ export async function loader({ request }: LoaderFunctionArgs) {
     day: "numeric",
   });
 
-  return json<LoaderData>({ dateISO, readable, providers, events });
+  // Compute month grid range and fetch booking counts (resilient if Booking model missing)
+  let countsByDay: Record<string, number> = {};
+  try {
+    const grid = buildMonthGrid(date);
+    const monthStart = grid[0];
+    const lastCell = grid[grid.length - 1];
+    const monthEndExclusive = addDaysUtil(lastCell, 1);
+    const rows = await (prisma as any).booking?.findMany({
+      where: {
+        start: { gte: monthStart, lt: monthEndExclusive },
+      },
+      select: { start: true },
+    });
+    if (Array.isArray(rows)) {
+      const acc: Record<string, number> = {};
+      for (const r of rows) {
+        const d = new Date(r.start);
+        const key = d.toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
+        acc[key] = (acc[key] ?? 0) + 1;
+      }
+      countsByDay = acc;
+    }
+  } catch (e) {
+    countsByDay = {};
+  }
+
+  return json<LoaderData>({ dateISO, readable, countsByDay });
 }
 
 export default function CalendarPage() {
-  const { dateISO, readable, providers, events } = useLoaderData<LoaderData>();
+  const { dateISO, readable, countsByDay } = useLoaderData<LoaderData>();
+  const base = new Date(dateISO);
+  const monthLabel = base.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  const grid = buildMonthGrid(base);
+  const prevMonth = toISODate(addMonthsUtil(base, -1));
+  const nextMonth = toISODate(addMonthsUtil(base, 1));
+  const todayISO = toISODate(new Date());
 
-  const startHour = 8; // 8 AM
-  const endHour = 21; // 9 PM
-  const totalMinutes = (endHour - startHour) * 60;
-  const pxPerMinute = 1; // 1px per minute
-
-  // Helpers
-  const prevDate = (() => {
-    const d = new Date(dateISO);
-    d.setDate(d.getDate() - 1);
-    return toISODate(d);
-  })();
-  const nextDate = (() => {
-    const d = new Date(dateISO);
-    d.setDate(d.getDate() + 1);
-    return toISODate(d);
-  })();
-
-  const hours = Array.from({ length: endHour - startHour + 1 }, (_, i) => startHour + i);
-  const weekUrl = `/calendar/week?date=${dateISO}`;
+  // View toggles navigate to other routes
+  const weekUrl = `/calendar/week`;
+  const dayUrl = `/calendar/day`;
+  const listUrl = `/calendar/list`;
 
   return (
-    <Page title="Calendar" subtitle={readable} primaryAction={{ content: "Today", url: `/calendar?date=${toISODate(new Date())}` }}>
+    <Page title="Calendar" subtitle={monthLabel} primaryAction={{ content: "Today", url: `/calendar?date=${toISODate(new Date())}` }}>
       <Layout>
         <Layout.Section>
           <Card>
@@ -130,67 +105,51 @@ export default function CalendarPage() {
               <InlineStack align="space-between">
                 <InlineStack gap="200">
                   <ButtonGroup>
-                    <Button url={`/calendar?date=${prevDate}`}>&larr; Prev</Button>
-                    <Button url={`/calendar?date=${nextDate}`}>Next &rarr;</Button>
+                    <Button url={`/calendar?date=${prevMonth}`}>&larr; Prev</Button>
+                    <Button url={`/calendar?date=${nextMonth}`}>Next &rarr;</Button>
                   </ButtonGroup>
-                  <ButtonGroup>
-                    <Button disabled>Month</Button>
+                  <InlineStack gap='200'>
+                    <Button url='/calendar' variant='primary'>Month</Button>
                     <Button url={weekUrl}>Week</Button>
-                  </ButtonGroup>
+                    <Button url={dayUrl}>Day</Button>
+                    <Button url={listUrl}>List</Button>
+                  </InlineStack>
                 </InlineStack>
-                <Text as="p" tone="subdued">{providers.length} team member{providers.length === 1 ? "" : "s"}</Text>
               </InlineStack>
 
-              {/* Empty state */}
-              {providers.length === 0 ? (
-                <Card>
-                  <BlockStack gap="200">
-                    <Text as="p">No providers yet. Add team members to view columns in the calendar.</Text>
-                  </BlockStack>
-                </Card>
-              ) : null}
+              <style>
+                {`
+                  .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+                  .cell{position:relative;min-height:92px;border:1px solid var(--p-color-border-subdued,#E3E3E3);border-radius:8px;padding:8px;background:var(--p-color-bg,#fff)}
+                  .cell.out{opacity:0.6}
+                  .dateNum{position:absolute;top:6px;right:8px;font-size:12px;color:var(--p-color-text-subdued)}
+                  .badge{position:absolute;right:6px;bottom:6px;min-width:18px;height:18px;padding:0 6px;border-radius:9999px;background:var(--p-color-bg-fill-brand,#5C6AC4);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1}
+                  .today{outline:2px solid var(--p-color-bg-fill-brand,#5C6AC4)}
+                  .weekday{font-size:12px;color:var(--p-color-text-subdued);text-align:center;margin-bottom:6px}
+                `}
+              </style>
 
-              {/* Providers header */}
-              <div style={{ display: "grid", gridTemplateColumns: `80px repeat(${providers.length}, minmax(200px, 1fr))`, gap: 1, alignItems: "center" }}>
-                <div />
-                {providers.map((p) => (
-                  <div key={p.id} style={{ padding: "8px 12px", borderBottom: "1px solid #E1E3E5" }}>
-                    <Text as="span" variant="bodyMd" fontWeight="medium">{p.name}</Text>
-                  </div>
+              {/* Weekday headers */}
+              <div className="month-grid" style={{ marginTop: 4 }}>
+                {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((w) => (
+                  <div key={w} className="weekday">{w}</div>
                 ))}
               </div>
 
-              {/* Time grid */}
-              <div style={{ display: "grid", gridTemplateColumns: `80px repeat(${providers.length}, minmax(200px, 1fr))`, gap: 1 }}>
-                {/* Time gutter */}
-                <div style={{ position: "relative", height: totalMinutes * pxPerMinute }}>
-                  {hours.map((h) => (
-                    <div key={h} style={{ position: "absolute", top: (h - startHour) * 60 * pxPerMinute - 8, left: 0, width: "100%", paddingRight: 8, textAlign: "right" }}>
-                      <Text as="span" tone="subdued">{formatHour(h)}</Text>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Provider columns */}
-                {providers.map((p) => (
-                  <div key={p.id} style={{ position: "relative", borderLeft: "1px solid #E1E3E5", borderRight: "1px solid #E1E3E5", height: totalMinutes * pxPerMinute, backgroundSize: `100% ${60 * pxPerMinute}px`, backgroundImage: `linear-gradient(transparent ${60 * pxPerMinute - 1}px, #F2F3F5 1px)` }}>
-                    {events.filter((e) => e.providerId === p.id).map((e) => {
-                      const top = (e.startMinutes - startHour * 60) * pxPerMinute;
-                      const height = Math.max(20, e.durationMinutes * pxPerMinute);
-                      return (
-                        <div key={e.id} style={{ position: "absolute", top, left: 6, right: 6, height, borderRadius: 6, background: e.color, color: "white", padding: 8, boxShadow: "0 1px 2px rgba(0,0,0,0.15)", overflow: "hidden" }}>
-                          <BlockStack gap="050">
-                            <InlineStack align="space-between">
-                              <Text as="span" variant="bodyMd" fontWeight="bold" color="text-inverse">{shortCustomer(e.customer)}</Text>
-                              <Badge tone="success">✓</Badge>
-                            </InlineStack>
-                            <Text as="span" variant="bodySm" color="text-inverse">{e.serviceName}</Text>
-                          </BlockStack>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
+              {/* Month grid */}
+              <div className="month-grid">
+                {grid.map((d) => {
+                  const iso = toISODate(d);
+                  const isOut = d.getMonth() !== base.getMonth();
+                  const isToday = iso === todayISO;
+                  const count = countsByDay[iso] || 0;
+                  return (
+                    <RemixLink key={iso} to={`/calendar/day?date=${iso}`} prefetch="intent" className={`cell ${isOut ? 'out' : ''} ${isToday ? 'today' : ''}`}>
+                      <span className="dateNum">{d.getDate()}</span>
+                      {count > 0 && <span className="badge">{count}</span>}
+                    </RemixLink>
+                  );
+                })}
               </div>
             </BlockStack>
           </Card>
@@ -200,19 +159,7 @@ export default function CalendarPage() {
   );
 }
 
-function shortCustomer(name?: string) {
-  if (!name) return "Customer";
-  const parts = name.trim().split(/\s+/);
-  if (parts.length <= 1) return name;
-  return `${parts[0]} ${parts[1][0]}.`;
-}
-
-function formatHour(h24: number) {
-  const ampm = h24 >= 12 ? "PM" : "AM";
-  let h = h24 % 12;
-  if (h === 0) h = 12;
-  return `${h} ${ampm}`;
-}
+// helpers removed; month view does not use shortCustomer/formatHour
 
 export function ErrorBoundary() {
   const err = useRouteError() as any;
